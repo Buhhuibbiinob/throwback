@@ -186,6 +186,22 @@ svg{display:block;overflow:visible}
 .rtabs button{flex:1;border:0;border-radius:999px;padding:calc(7*var(--u)) 0;background:rgba(255,255,255,.1);color:#ddd;font:600 calc(12*var(--u))/1 var(--ui);cursor:pointer}
 .rtabs button.on{background:#fff;color:#111}
 .favbtn{background:none;border:0;color:#ff4f7b;font:600 calc(13*var(--u))/1 var(--ui);padding:calc(10*var(--u));cursor:pointer}
+.hub .qa{display:grid;grid-template-columns:1fr 1fr;gap:calc(8*var(--u))}
+.hub .qa button,.ccard{display:flex;flex-direction:column;align-items:flex-start;gap:calc(4*var(--u));text-align:left;border:1px solid #0b0b0c;border-radius:calc(10*var(--u));
+  background:linear-gradient(#34373c,#27292d);box-shadow:0 1px 0 rgba(255,255,255,.08),inset 0 1px 0 rgba(255,255,255,.06);color:#fff;padding:calc(11*var(--u)) calc(12*var(--u));cursor:pointer;font-family:var(--ui)}
+.hub .qa b{font:700 calc(15*var(--u))/1.1 var(--ui)}
+.hub .qa small,.ccard small{font:500 calc(11*var(--u))/1.3 var(--ui);color:#a3a7ad}
+.hub .qa button:active,.ccard:active{filter:brightness(1.2)}
+.ctabs{display:flex;gap:calc(5*var(--u));background:#151618;border:1px solid #0b0b0c;border-radius:999px;padding:calc(3*var(--u))}
+.ctabs button{flex:1;border:0;border-radius:999px;padding:calc(8*var(--u)) 0;background:none;color:#b9bdc2;font:700 calc(12*var(--u))/1 var(--ui);cursor:pointer}
+.ctabs button.on{background:#f2f2f2;color:#111}
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:calc(8*var(--u))}
+.ccard{min-height:calc(104*var(--u))}
+.ccard[hidden]{display:none}
+.ccard i{font:700 calc(10*var(--u))/1 var(--ui);font-style:normal;letter-spacing:.08em;color:#ffcf4a;text-transform:uppercase}
+.ccard b{font:700 calc(15*var(--u))/1.1 var(--ui)}
+.ccard[aria-pressed="true"]{border-color:#ffcf4a;box-shadow:0 0 0 2px rgba(255,207,74,.55)}
+#catNote{margin:calc(-4*var(--u)) calc(2*var(--u)) 0}
 #guLock .pbody.shake{animation:guShake .35s}
 @keyframes guShake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
 #guIn{flex:1 1 auto;min-width:0}
@@ -650,7 +666,7 @@ svg{display:block;overflow:visible}
     <div class="iopop" id="ioPop" hidden>
       <div class="row"><span>Grid</span><div class="seg" id="segIoGrid"><button type="button" data-v="0">Off</button><button type="button" data-v="1">On</button></div></div>
       <div class="row"><span>HDR</span><div class="seg" id="segIoHdr"><button type="button" data-v="0">Off</button><button type="button" data-v="1">On</button></div></div>
-      <div class="row"><span>Cameras</span><button class="dbtn" id="ioPopCams" type="button">Switch</button></div>
+      <div class="row"><span>All cameras, roll n settings</span><button class="dbtn" id="ioPopCams" type="button">Open</button></div>
     </div>
     <div class="ibot">
       <div class="imodes" id="ioModes"><div class="track" id="ioTrack"><button type="button" data-m="video">VIDEO</button><button type="button" data-m="photo">PHOTO</button><button type="button" data-m="square">SQUARE</button></div></div>
@@ -701,7 +717,7 @@ svg{display:block;overflow:visible}
       <button class="pflash rbtn" id="pFlash" type="button" aria-label="Flash, press to charge" style="top:calc((var(--lh) + 64)*var(--u))"><svg viewBox="0 0 16 20"><path d="M10 1 2.5 11h5l-2 8L14 8.5H8.6z" fill="currentColor"/></svg></button>
       <span class="pled" id="pLed" style="top:calc((var(--lh) + 91)*var(--u))"></span><span class="pledl prt" style="top:calc((var(--lh) + 90)*var(--u))">Ready</span>
       <button class="pmini prt" id="pRot" type="button" style="right:calc(50*var(--u));top:calc((var(--lh) + 70)*var(--u))">↻ Turn</button>
-      <button class="pmini prt" id="pCams" type="button" style="right:calc(50*var(--u));top:calc((var(--lh) + 100)*var(--u))">Cameras</button>
+      <button class="pmini prt" id="pCams" type="button" style="right:calc(50*var(--u));top:calc((var(--lh) + 100)*var(--u))">Menu</button>
       <button class="pmini prt" id="pRoll" type="button" style="right:calc(50*var(--u));top:calc((var(--lh) + 40)*var(--u))">Roll</button>
       <button class="plab" id="pLab" type="button" style="top:calc((var(--lh) + 142)*var(--u))"><b>1-HR PHOTO</b><span>Drop off the roll<br><em id="pLabN">0 to develop</em></span></button>
     </div>
@@ -837,17 +853,21 @@ svg{display:block;overflow:visible}
     <div class="psec">cheat sheet · combos to start with</div>
     <div class="group" id="cheat"></div>
   </section>
-  <section class="sheet" id="camSheet" aria-label="Cameras" hidden>
-    <header><h2>Cameras</h2><button class="dbtn go" id="camClose" type="button">Done</button></header>
-    <div class="psec">phone apps · 2010-2017</div>
-    <div class="group" id="camApps"></div>
-    <div class="psec">pick your iphone</div>
-    <p class="gnote" id="camGensNote"></p>
-    <div class="group" id="camGens"></div>
-    <div class="psec">before phones · 90s n 2000s</div>
-    <div class="group" id="camRetro"></div>
-    <div class="psec">use a video</div>
-    <div class="group"><button class="row camrow" id="vidThru" type="button"><span>play a video thru the camera<small>pick a vid from your phone n it plays thru whatever camera you're on. hit record to save it like that, or snap a pic from it</small></span></button></div>
+  <section class="sheet hub" id="camSheet" aria-label="Menu" hidden>
+    <header><h2>Menu</h2><button class="dbtn go" id="camClose" type="button">Done</button></header>
+    <div class="qa">
+      <button type="button" id="qaRoll"><b>Roll</b><small>your saved pics n vids</small></button>
+      <button type="button" id="qaEdit"><b>Edit</b><small>put a filter on a pic or vid from your phone</small></button>
+      <button type="button" id="vidThru"><b>Vid thru cam</b><small>play a vid from your phone thru a camera</small></button>
+      <button type="button" id="qaSet"><b>Settings</b><small>sound, mirror, save size</small></button>
+    </div>
+    <div class="psec">pick a camera</div>
+    <div class="ctabs" id="camTabs" role="tablist">
+      <button type="button" data-c="phone">Phone apps</button><button type="button" data-c="digi">Digital</button><button type="button" data-c="film">Film</button><button type="button" data-c="video">Video</button>
+    </div>
+    <p class="gnote" id="catNote"></p>
+    <div class="cgrid" id="camGrid"></div>
+    <div id="genBox"><div class="psec">pick your iphone</div><p class="gnote" id="camGensNote"></p><div class="group" id="camGens"></div></div>
   </section>
   <section class="sheet rmenu" id="rMenu" aria-label="Camera menu" hidden>
     <header><h2 id="rMenuTitle">MENU</h2><button class="dbtn go" id="rMenuClose" type="button">EXIT</button></header>
@@ -956,7 +976,7 @@ const ERAS = {
 const CAMS = {
   ig:     { n:'Instagram', sub:'2012-2015 · square pics, valencia, the og edit tools', skin:'ig' },
   snap:   { n:'Snapchat', sub:'2015-2016 · dog filter, swipe filters, captions. streak days', skin:'snap' },
-  ios:    { n:'iPhone Camera', sub:'just the regular camera app, on whatever iphone you pick', skin:'ios' },
+  ios:    { n:'iPhone Camera', sub:'2007-2017 · just the regular camera app, on whatever iphone you pick', skin:'ios' },
   phone05: { n:'Flip Phone', sub:'2005 · vga camera phone, no flash, grainy n blurry like the bus stop pics', skin:'digi', retro:1 },
   webcam07: { n:'Webcam', sub:'2007 · laptop webcam, myspace angles n dim bedroom lighting', skin:'digi', retro:1 },
   bb09: { n:'BlackBerry', sub:'2009 · 3.2mp phone cam with that harsh lil led flash, bbm pic energy', skin:'digi', retro:1 },
@@ -964,7 +984,7 @@ const CAMS = {
   digi06: { n:'Point & Shoot', sub:'2006 · flash so harsh it\'s iconic, date stamp, myspace pfp era', skin:'digi', retro:1 },
   digi11: { n:'Cyber Flash', sub:'2011 · 12mp point n shoot, flash on everything, tumblr n party blog era', skin:'digi', retro:1 },
   film98: { n:'35mm Point & Shoot', sub:"1998 · real film camera with the orange date stamp in the corner, flash pops", skin:'disp', retro:1 },
-  instant: { n:'Instant', sub:'polaroid type beat · square pics in the white frame, prints right away, 10 per pack', skin:'disp', retro:1 },
+  instant: { n:'Instant', sub:'70s-2000s · polaroid type beat, square pics in the white frame, prints right away, 10 per pack', skin:'disp', retro:1 },
   disp:   { n:'Disposable', sub:'90s-2000s · 27 shots, no redos, gotta wait for them to develop', skin:'disp', retro:1 },
   vhs:    { n:'Camcorder', sub:'90s · home video tape, date on the screen, fuzzy in a good way', skin:'vhs', retro:1 },
   minidv: { n:'MiniDV', sub:'2004 · digital tape camcorder, cleaner but still that home video feel', skin:'vhs', retro:1 },
@@ -4349,14 +4369,35 @@ function setCam(id, quiet) {
   syncCams(); layout(); syncLabel();
 }
 const GENINFO = { 2009:'3mp, no flash, soft n grainy. early days fr', 2010:'5mp, first flash, front cam was potato quality', 2011:'8mp, way sharper. the siri phone', 2013:'8mp, true tone flash. peak tumblr era', 2015:'12mp, screen flash selfies, live photos', 2016:'12mp, crispy, colors got rich' };
+/* the menu: camera picker split into sections, plus the main stuff (roll, edit, settings) up top */
+const CAT = { ig:'phone', snap:'phone', ios:'phone', phone05:'digi', webcam07:'digi', bb09:'digi', digi01:'digi', digi06:'digi', digi11:'digi', film98:'film', instant:'film', disp:'film', vhs:'video', minidv:'video', flip09:'video' };
+const CATNOTE = { phone:'the og apps from 2012-2017. pick which iphone down below too', digi:'old phones, webcams n digital cameras, 2001-2011', film:'real film looks. some make you wait for the prints', video:'cameras made for vids. hit the red button to record' };
+S.camCat = null;
+function showCat(c) {
+  S.camCat = c;
+  document.querySelectorAll('#camTabs button').forEach(b => b.classList.toggle('on', b.dataset.c === c));
+  document.querySelectorAll('#camGrid .ccard').forEach(b => { b.hidden = CAT[b.dataset.cam] !== c; });
+  $('#catNote').textContent = CATNOTE[c]; $('#genBox').hidden = c !== 'phone';
+}
 function buildCamSheet() {
+  const g = $('#camGrid'); g.innerHTML = '';
+  Object.keys(CAMS).forEach(k => {
+    const C = CAMS[k], parts = C.sub.split(' · '), era = parts.length > 1 ? parts[0] : '', desc = parts.length > 1 ? parts.slice(1).join(' · ') : C.sub;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'ccard camrow'; b.dataset.cam = k;
+    b.innerHTML = '<i></i><b></b><small></small>'; b.children[0].textContent = era || 'now'; b.children[1].textContent = C.n; b.children[2].textContent = desc;
+    b.addEventListener('click', () => { closeSheets(true); setCam(k); });
+    g.appendChild(b);
+  });
+  $('#camTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) showCat(b.dataset.c); });
+  $('#qaRoll').addEventListener('click', () => openSheet('#rollSheet'));
+  $('#qaEdit').addEventListener('click', () => { closeSheets(); openPicker(false); });
+  $('#qaSet').addEventListener('click', () => openSheet('#setSheet'));
   const row = (box, label, sub, data, fn) => {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'row camrow'; Object.assign(b.dataset, data);
     b.innerHTML = '<span></span><i class="chk" aria-hidden="true">✓</i>';
     b.firstChild.textContent = label; const sm = document.createElement('small'); sm.textContent = sub; b.firstChild.appendChild(sm);
     b.addEventListener('click', fn); box.appendChild(b);
   };
-  Object.keys(CAMS).forEach(k => row(CAMS[k].retro ? $('#camRetro') : $('#camApps'), CAMS[k].n, CAMS[k].sub, { cam:k }, () => { closeSheets(true); setCam(k); }));
   GENS.forEach(y => row($('#camGens'), ERAS[y].phone + ' · ' + y, GENINFO[y], { year:y }, () => {
     S.year = y; store.set('year', y); devDirty = true; syncCams();
     if (skinName() === 'ios') { SK.ios.enter(); layout(); }
@@ -4371,7 +4412,7 @@ function syncCams() {
   });
   $('#camGensNote').textContent = CAMS[S.cam].retro ? 'only works with the phone apps up top' : 'this changes the phone itself. how sharp, how grainy, the colors, the flash';
 }
-function openCams() { syncCams(); openSheet('#camSheet'); }
+function openCams() { syncCams(); showCat(CAT[S.cam] || 'phone'); openSheet('#camSheet'); }
 function flipCamera() {
   if (VID.cur || S.snapRec || iosRecS) return;
   S.facing = S.facing === 'user' ? 'environment' : 'user'; store.set('facing', S.facing);
@@ -5076,8 +5117,8 @@ function openRMenu() {
     row('TAPE WEAR', [[0, 'NEW'], [.6, 'WORN']], () => RT.track, v => { RT.track = v; store.set('vTrack', v); });
   }
   if (sk !== 'vhs') row('HOLD', [[false, 'WIDE'], [true, 'TALL']], () => RT.port, v => { if (v !== RT.port) turnRetro(); });
-  const c = document.createElement('div'); c.className = 'row'; c.innerHTML = '<span>OTHER CAMERAS</span>';
-  const b = document.createElement('button'); b.type = 'button'; b.className = 'dbtn'; b.textContent = 'SWITCH'; b.addEventListener('click', () => { closeSheets(true); openCams(); }); c.appendChild(b); box.appendChild(c);
+  const c = document.createElement('div'); c.className = 'row'; c.innerHTML = '<span>ALL CAMERAS, ROLL N SETTINGS</span>';
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'dbtn'; b.textContent = 'OPEN'; b.addEventListener('click', () => { closeSheets(true); openCams(); }); c.appendChild(b); box.insertBefore(c, box.firstChild);
   $('#rMenuTitle').textContent = sk === 'digi' ? 'MENU' : sk === 'disp' ? 'CAMERA' : 'MENU';
   openSheet('#rMenu');
 }
@@ -5308,7 +5349,7 @@ function setUI(ui) {
 }
 
 /* ---------- sheets ---------- */
-function openSheet(id) { closeSheets(true); $('#scrim').hidden = false; $(id).hidden = false; devDirty = false; }
+function openSheet(id) { closeSheets(true); $('#scrim').hidden = false; $(id).hidden = false; devDirty = false; const sc = $(id); if (sc) sc.scrollTop = 0; }
 function closeSheets(quiet) {
   $('#scrim').hidden = true; ['#setSheet', '#rollSheet', '#looksSheet', '#camSheet', '#rMenu', '#printSheet'].forEach(s => { $(s).hidden = true; });
   if (quiet !== true && devDirty && S.screen === 'edit' && S.kind === 'photo') { devDirty = false; redevelop(); }
@@ -5416,7 +5457,8 @@ function glReset() {
 
 /* ---------- start ---------- */
 VID.mime = pickMime();
-buildStrip(); buildLensStrip(); buildLensTray(); buildAdjStrip(); buildBeauty(); buildGU($('#guSliders'), ''); buildGU($('#btGU'), 'B'); buildCamSheet(); buildSnapTray(); renderRoll(); rollLoad(); renderStrip(); syncFlash(); syncGrid(); syncTools();
+buildStrip(); buildLensStrip(); buildLensTray(); buildAdjStrip(); buildBeauty(); buildGU($('#guSliders'), ''); buildGU($('#btGU'), 'B'); buildCamSheet(); buildSnapTray(); renderRoll(); rollLoad();
+setTimeout(() => { if (!store.get('menuTip') && S.ui === 'phone') { store.set('menuTip', 1); hud(CAMS[S.cam].retro ? 'tap Menu to switch cameras, see your roll n settings' : 'tap the camera icon to switch cameras, see your roll n settings'); } }, 2500); renderStrip(); syncFlash(); syncGrid(); syncTools();
 segSet('#segMirror', S.mirror ? 1 : 0); segSet('#segSound', S.sound ? 1 : 0); segSet('#segSize', S.saveSize); segSet('#segFlare', S.flareDef);
 if (gl) { try { ['stat', 'live', 'filter', 'booth', 'bmask', 'mixacc'].forEach(prog); } catch (e) { console.error(e); } }
 $('#app').hidden = S.ui === 'booth'; $('#booth').hidden = S.ui !== 'booth';
