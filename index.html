@@ -2056,10 +2056,30 @@ function toneU(E) { return { uContrast:E.contrast, uCrush:E.crush, uLift:E.lift,
 const meterCv = document.createElement('canvas'); meterCv.width = meterCv.height = 24;
 const meterCx = meterCv.getContext('2d', { willReadFrequently:true });
 /* box (optional) = the face, so a bright face on a dark night background isn't blown out */
+/* metering the live camera on the GPU: shrink the frame that's already on the graphics chip to 24x24 and read back only those
+   pixels. reading a full camera frame back to the CPU (drawImage + getImageData) froze iPhones for a split second several times a second */
+const GM = { a:null, b:null, buf:new Uint8Array(24 * 24 * 4), out:new Uint8ClampedArray(24 * 24 * 4), flipY:null, ok:false };
+function gpuMeter(src) {
+  if (src !== vid || !vidTex || vidTex.src !== vid || typeof gl === 'undefined' || !gl) return null;
+  try {
+    if (!GM.a) { GM.a = fbo(96, 96); GM.b = fbo(24, 24); }
+    run('down', GM.a, { t:vidTex }, { dpx:[1 / 96, 1 / 96] });
+    run('down', GM.b, { t:GM.a }, { dpx:[1 / 24, 1 / 24] });
+    gl.bindFramebuffer(gl.FRAMEBUFFER, GM.b.fb); gl.readPixels(0, 0, 24, 24, gl.RGBA, gl.UNSIGNED_BYTE, GM.buf); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    if (GM.flipY === null) {  // one-time check of which way up the GPU copy is, against the old way
+      try { meterCx.drawImage(src, 0, 0, 24, 24); const ref = meterCx.getImageData(0, 0, 24, 24).data; let e0 = 0, e1 = 0;
+        for (let j = 0; j < 24; j++) for (let i = 0; i < 24; i++) { const a = GM.buf[(j * 24 + i) * 4 + 1], b0 = ref[(j * 24 + i) * 4 + 1], b1 = ref[((23 - j) * 24 + i) * 4 + 1]; e0 += Math.abs(a - b0); e1 += Math.abs(a - b1); }
+        GM.flipY = e1 < e0; GM.ok = Math.min(e0, e1) / 576 < 40; } catch (e) { GM.flipY = true; GM.ok = true; }
+    }
+    if (!GM.ok) return null;
+    for (let j = 0; j < 24; j++) { const sj = GM.flipY ? 23 - j : j; GM.out.set(GM.buf.subarray(sj * 96, sj * 96 + 96), j * 96); }
+    return GM.out;
+  } catch (e) { return null; }
+}
 function meter(src, fp, box, soft) {
   fp = fp || (box ? { x:(box.x0 + box.x1) / 2, y:(box.y0 + box.y1) / 2 } : { x:.5, y:.45 });
-  try { meterCx.drawImage(src, 0, 0, 24, 24); } catch (e) { return { gain:1, iso:1, cast:[1,1,1], mean:.45 }; }
-  const d = meterCx.getImageData(0, 0, 24, 24).data;
+  let d = gpuMeter(src);
+  if (!d) { try { meterCx.drawImage(src, 0, 0, 24, 24); } catch (e) { return { gain:1, iso:1, cast:[1,1,1], mean:.45 }; } d = meterCx.getImageData(0, 0, 24, 24).data; }
   let sw = 0, sl = 0, R = 0, G = 0, B = 0, fs = 0, fn = 0, sx = 0, sy = 0, sk = 0, sn = 0, top = 0, bot = 0; const ls = [];
   for (let j = 0; j < 24; j++) for (let i = 0; i < 24; i++) {
     const k = (j * 24 + i) * 4, r = d[k] / 255, g = d[k+1] / 255, b = d[k+2] / 255;
@@ -3624,7 +3644,8 @@ function afAmount(t) {
   for (let i = 1; i < AFK.length; i++) if (u <= AFK[i][0]) { const [u0, v0] = AFK[i - 1], [u1, v1] = AFK[i]; return a.k * (v0 + (v1 - v0) * (u - u0) / (u1 - u0)); }
   return 0;
 }
-function liveFps(ae) { return ae.iso > 1.7 ? 15 : ae.iso > 1.25 ? 20 : 24; }
+const isRec = () => !!VID.cur || BUG.rec > 0;
+function liveFps(ae) { return isRec() ? 30 : ae.iso > 1.7 ? 20 : 24; }
 
 /* ---------- live render ---------- */
 function srcDims(src) { return [src.videoWidth || src.naturalWidth || src.width, src.videoHeight || src.naturalHeight || src.height]; }
@@ -3635,7 +3656,7 @@ function cropLZ(full, fmt, cap, lz) { return lz > 1.001 ? cropZoom(full, fmt, ca
 function fpFull(src, mirror, fmt) { const [vw, vh] = srcDims(src), r = cropRect(vw, vh, fmt); return { x:(r.x + (mirror ? 1 - S.fp.x : S.fp.x) * r.w) / vw, y:(r.y + S.fp.y * r.h) / vh }; }
 function liveRender(src, mirror, ae, t, E, fmt, w, h, opt) {
   if (!pp || pp[0].w !== w || pp[0].h !== h) { if (pp) { free(pp[0]); free(pp[1]); } pp = [fbo(w, h), fbo(w, h)]; prevOk = false; }
-  if (t - ae.meterT > 220 && !(S.aeLock && ae === AE)) {
+  if (t - ae.meterT > (VID.cur || BUG.rec > 0 ? 600 : 220) && !(S.aeLock && ae === AE)) {
     ae.meterT = t; const m = meter(src, fpFull(src, mirror, fmt));
     const g = Math.pow(1 + (Math.pow(m.gain, 1 / 2.2) - 1) * .7, 2.2), tg = Math.log(g);
     if (ae.started && Math.abs(tg - ae.tg) > .45 && !S.af && opt.af) startAF(t, .6);
@@ -3644,7 +3665,7 @@ function liveRender(src, mirror, ae, t, E, fmt, w, h, opt) {
   stepAE(ae, t);
   if (!vidTex) vidTex = newTex(0, 0);
   gl.bindTexture(gl.TEXTURE_2D, vidTex.tex);
-  try { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src); } catch (e) { return null; }
+  try { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src); vidTex.src = src; } catch (e) { return null; }
   const iso = ae.iso;
   run('live', pp[0], { tVid:vidTex, tPrev:pp[1], tNoise:NOISE, tLut:lutTex(opt.fx || 0) }, Object.assign({
     crop:cropUV(src, fmt), mirror:mirror ? 1 : 0, blend:prevOk ? (iso > 1.7 ? .42 : iso > 1.25 ? .6 : .82) : 1,
@@ -3752,7 +3773,7 @@ const CW = { ct:-1, t:0, restart:-1e9 };
 function camWatch(t) {
   const ct = vid.currentTime;
   if (ct !== CW.ct) { CW.ct = ct; CW.t = t; return; }
-  if (t - CW.t > 2600 && t - CW.restart > 7000 && !frozen && (S.ui === 'booth' || S.screen === 'cam')) {
+  if (t - CW.t > 2600 && t - CW.restart > 7000 && !frozen && !isRec() && !FILEV.on && (S.ui === 'booth' || S.screen === 'cam')) {
     CW.restart = t; CW.t = t; console.warn('camera stalled, restarting'); startCamera();
   }
 }
@@ -4504,7 +4525,7 @@ SK.ig = {
   el:'#cam', slot:'#cam .slate',
   format: () => store.get('format', '1:1'),
   need: asp => 113 + 307 / asp + 118,
-  fps: ae => liveFps(ae), drops:true,
+  fps: ae => liveFps(ae),
   frame: (src, mirror, ae, t, ctx, ow, oh) => liveFrame(src, mirror, ae, t, ctx, ow, oh, S.liveFx),
   opened: () => animIris(IRIS.t, 0, 320).then(() => startAF(performance.now())),
   async shoot() {
@@ -4522,7 +4543,7 @@ SK.snap = {
   el:'#camSnap', slot:'#camSnap .svf',
   format: () => '4:3P',
   need: () => 427 + 120,
-  fps: ae => ae.iso > 1.6 ? 20 : 30,
+  fps: ae => isRec() || ae.iso <= 1.6 ? 30 : 24,
   frame: (src, mirror, ae, t, ctx, ow, oh) => liveFrame(src, mirror, ae, t, ctx, ow, oh, 0),
   opened: () => startAF(performance.now(), .5),
   enter() { syncSnapUI(); },
@@ -4590,7 +4611,7 @@ SK.ios = {
   el:'#camIos', slot:'#camIos .ivf',
   format: () => S.iosMode === 'square' && !ios6() ? '1:1' : '4:3',
   need: () => ios6() ? 427 + 66 : 44 + 427 + 120,
-  fps: ae => ae.iso > 1.6 ? 20 : 30,
+  fps: ae => isRec() || ae.iso <= 1.6 ? 30 : 24,
   frame(src, mirror, ae, t, ctx, ow, oh) { return S.iosGrid && !ios6() ? iosGridFrame(src, mirror, ae, t, ctx, ow, oh) : liveFrame(src, mirror, ae, t, ctx, ow, oh, ios6() ? 0 : S.iosFx || 0); },
   opened: () => ios6() ? animIris(IRIS.t, 0, 320).then(() => startAF(performance.now())) : startAF(performance.now(), .6),
   enter() { if (ios6() && S.iosMode === 'square') S.iosMode = 'photo'; S.format = this.format(); syncIos(); },
@@ -4928,7 +4949,7 @@ function rtRender(name, src, mirror, t, w, h, unis) {
   if (!rtPP || rtPP[0].w !== w || rtPP[0].h !== h) { if (rtPP) { free(rtPP[0]); free(rtPP[1]); } rtPP = [fbo(w, h), fbo(w, h)]; RT.prevOk = false; }
   if (!vidTex) vidTex = newTex(0, 0);
   gl.bindTexture(gl.TEXTURE_2D, vidTex.tex);
-  try { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src); } catch (e) { return null; }
+  try { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src); vidTex.src = src; } catch (e) { return null; }
   run(name, rtPP[0], { tVid:vidTex, tPrev:rtPP[1], tNoise:NOISE }, Object.assign({ crop:cropUV(src, S.format), mirror:mirror ? 1 : 0, res:[w, h], time:t / 1000 }, unis));
   const out = rtPP[0]; rtPP.reverse(); RT.prevOk = true; return out;
 }
@@ -5181,7 +5202,7 @@ SK.disp = {
   frame(src, mirror, ae, t, ctx, ow, oh) {
     if (!vidTex) vidTex = newTex(0, 0);
     gl.bindTexture(gl.TEXTURE_2D, vidTex.tex);
-    try { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src); } catch (e) { return false; }
+    try { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src); vidTex.src = src; } catch (e) { return false; }
     rtAE(src, mirror, ae, t);
     if (!G.opticF || G.opticF.w !== ow || G.opticF.h !== oh) { free(G.opticF); G.opticF = fbo(ow, oh); }
     run('optic', G.opticF, { tVid:vidTex }, { crop:cropUV(src, S.format), mirror:mirror ? 1 : 0, res:[ow, oh] });
