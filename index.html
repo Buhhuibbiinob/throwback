@@ -1331,6 +1331,7 @@ void main(){
  gl_FragColor=vec4(mix(texture2D(tPrev,v).rgb,c,blend),1.0);}`,
 /* digicam still: cheap lens, hard xenon flash, CCD colour, hard clipping with purple fringing, blotchy noise */
 ccd: HEAD + `uniform sampler2D t;uniform sampler2D tBlur;uniform sampler2D tMean;uniform sampler2D tNoise;uniform vec2 res;uniform float gain;uniform vec3 wb;uniform float flash;uniform float sat;uniform float noise;uniform float chromaN;uniform float fringe;uniform float soft;uniform vec2 seed;uniform float smear;
+uniform vec3 shC;uniform vec3 hiC;uniform float clipK;uniform float blk;
 uniform vec4 fA;uniform vec4 fB;uniform vec4 fC;
 float perM(vec4 f,vec2 uv,float asp){if(f.w<0.5)return 0.0;vec2 p=(uv-f.xy)*vec2(asp,1.0);float w=f.z;
  float head=1.0-smoothstep(0.8,1.25,length(p/vec2(w*0.66,w*0.9)));
@@ -1360,7 +1361,11 @@ void main(){
  /* CCD smear: a clipped light bleeds a faint vertical stripe through the whole column */
  if(smear>0.0){float sm=0.0;for(int i=0;i<20;i++){vec3 s=pow(max(texture2D(t,vec2(uv.x,(float(i)+0.5)/20.0)).rgb,0.0),vec3(2.2))*gain;sm+=smoothstep(0.97,1.0,min(s.r,min(s.g,s.b)));}
   lin+=vec3(0.9,0.8,1.0)*min(sm,2.0)/20.0*(1.0-smoothstep(2.5,5.0,sm))*smear*1.1;}
+ /* small sensors clip early and hard: the brights go flat white */
+ lin*=1.0+clipK;lin=min(lin,vec3(1.0))+max(lin-1.0,0.0)*0.05;
  vec3 g=clamp(pow(max(lin,0.0),vec3(1.0/2.2)),0.0,1.0);
+ g=clamp((g-blk)/(1.0-blk),0.0,1.0);
+ {float Lq=luma(g);g+=shC*(1.0-smoothstep(0.0,0.45,Lq))+hiC*smoothstep(0.55,1.0,Lq);g=clamp(g,0.0,1.0);}
  vec3 y=rgb2ycc(g);y.yz*=sat;y.z+=0.01*smoothstep(0.3,0.8,y.x);g=clamp(ycc2rgb(y),0.0,1.0);
  g=mix(g,g*g*(3.0-2.0*g),0.3);
  float L=luma(clamp(g,0.0,1.0));float bl=luma(clamp(pow(max(b,0.0),vec3(1.0/2.2)),0.0,1.0));
@@ -1894,6 +1899,16 @@ async function flashFacesFor(src, on) {
   if (!on || !facesReady()) return flashFaces(null);
   try { return flashFaces(await within(findFaces(src, true), 2600, []), src.width, src.height); } catch (e) { return flashFaces(null); }
 }
+/* one roll of the dice per shot, kept with the shot so re-editing doesn't change it.
+   ev: exposure miss in stops, wb: white balance drift per channel, focus: how much it missed focus, fl: flash power, hue: film color shift */
+function gauss() { let u = 0, v = 0; while (!u) u = Math.random(); while (!v) v = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); }
+function shotVar(meta, k) {
+  if (meta && meta.sv) return meta.sv;
+  k = k ?? 1;
+  const sv = { ev:clamp(gauss() * .16 * k, -.45, .45), wb:[1 + clamp(gauss() * .025 * k, -.06, .06), 1, 1 + clamp(gauss() * .03 * k, -.07, .07)],
+    focus:Math.random() < .12 * k ? .35 + Math.random() * .5 : Math.random() * .12 * k, fl:clamp(.82 + Math.random() * .22, .7, 1), hue:clamp(gauss() * .12 * k, -.25, .25) };
+  if (meta) meta.sv = sv; return sv;
+}
 function faceBox(list) {
   if (!list || !list.length) return null;
   let x0 = 1, y0 = 1, x1 = 0, y1 = 0;
@@ -2091,7 +2106,7 @@ async function develop() {
   run('sensor', sen, { tLow:low, tBlurQ:q1, tMean:m1, tNoise:NOISE }, Object.assign(flashFaces(S.faces && S.faces.list, W, H), {
     res:[W, H], ca:E.ca, corner:E.corner, vig:E.vig, flash:flashAmt,
     flashCol: (meta.realFlash || front) ? [1.04, 1, .93] : [.95, 1, 1.07],
-    gain:a.gain, wb:a.cast, noiseL:E.noise * a.iso * fm * .38, noiseC:E.noiseC * a.iso * fm * .32,
+    gain:a.gain * (meta.imported ? 1 : Math.pow(2, shotVar(meta, .5).ev)), wb:meta.imported ? a.cast : a.cast.map((c, i) => c * shotVar(meta, .5).wb[i]), noiseL:E.noise * a.iso * fm * .38, noiseC:E.noiseC * a.iso * fm * .32,
     grain:E.grain * pxs, seed:[Math.random() * 512, Math.random() * 512]
   }, toneU(E)));
   const nr = mk2(W, H);
@@ -4385,12 +4400,12 @@ const RT = {
   rec:null, fade:0, fadeTo:0, fadeFrom:0, fadeT0:0, fadeMs:0, fader: store.get('vFader', true), vdate: store.get('vDate', true), night:false, track: store.get('vTrack', 0), field:0, vcr:false, vclip:0, vstate:'', counter:0, msg:'', msgT:0
 };
 const DIGI = {
-  digi01: { name:'Digicam 2001', size:[1600, 1200], inner:.6, sat:1.06, noise:.05, chromaN:.04, fringe:1, soft:.7, jpeg:.5, tint:[.97, 1.02, 1.01], lcd:[176, 132], lcdIn:[236, 177], af:900, write:2200, sharp:2.2, year:2001, smear:1.2, movie:[320, 240, 15], mbps:350000, awbIn:[1.1, 1, .8], label:'1.6" LCD', print:'2.1 Mega Pixels · Digital Camera', mp:'2M', maxZoom:2 },
-  phone05: { name:'Flip Phone 2005', size:[640, 480], inner:.5, sat:.94, noise:.085, chromaN:.07, fringe:.4, soft:.95, jpeg:.42, tint:[1.04, .96, 1.05], lcd:[128, 96], lcdIn:[236, 177], af:120, write:1600, sharp:1.1, year:2005, smear:0, movie:[176, 144, 15], mbps:110000, awbIn:[1.16, 1, .74], label:'1.9" screen', print:'VGA · Camera Phone', mp:'0.3M', maxZoom:4, noFlash:1, fps:7, shots:180, brand:'Camera Phone' },
-  webcam07: { name:'Webcam 2007', size:[1280, 960], inner:.55, sat:.86, noise:.07, chromaN:.05, fringe:.3, soft:.8, jpeg:.5, tint:[.98, 1.03, 1.04], lcd:[160, 120], lcdIn:[236, 177], af:0, write:500, sharp:1.2, year:2007, smear:0, movie:[320, 240, 15], mbps:300000, awbIn:[1.02, 1, 1.02], label:'built-in iSight', print:'1.3 MP · Built-in Camera', mp:'1.3M', maxZoom:2, noFlash:1, fps:15, shots:999, brand:'Webcam' },
-  bb09: { name:'BlackBerry 2009', size:[2048, 1536], inner:.75, sat:1.1, noise:.045, chromaN:.03, fringe:.5, soft:.5, jpeg:.6, tint:[1.02, 1, .97], lcd:[240, 180], lcdIn:[296, 222], af:700, write:900, sharp:1.5, year:2009, smear:.3, movie:[320, 240, 24], mbps:600000, awbIn:[1.08, 1, .86], label:'2.4" screen', print:'3.2 MP · Flash · Smartphone', mp:'3.2M', maxZoom:2, fps:12, shots:850, brand:'Smartphone' },
-  digi11: { name:'Cyber Flash 2011', size:[3000, 2250], inner:.95, sat:1.22, noise:.02, chromaN:.012, fringe:.35, soft:.2, jpeg:.84, tint:[1, 1, 1.02], lcd:[320, 240], lcdIn:[296, 222], af:300, write:450, sharp:1.4, year:2011, smear:.5, movie:[640, 480, 30], mbps:2500000, awbIn:[1.03, 1, .93], label:'3.0" LCD', print:'12.1 Mega Pixels · 5x Zoom · HD', mp:'12M', maxZoom:5, fps:24, shots:1260, brand:'Cyber Flash' },
-  digi06: { name:'Point & Shoot 2006', size:[2048, 1536], inner:.88, sat:1.3, noise:.03, chromaN:.02, fringe:.6, soft:.35, jpeg:.7, tint:[.99, 1, 1.03], lcd:[320, 240], lcdIn:[296, 222], af:420, write:700, sharp:1.6, year:2006, smear:.8, movie:[640, 480, 30], mbps:1400000, awbIn:[1.05, 1, .9], label:'2.5" LCD', print:'CCD · 7.2 Mega Pixels · 3x Optical Zoom', mp:'7M', maxZoom:6 }
+  digi01: { sig:{ sh:[.0, .015, .02], hi:[.02, .01, -.02], clip:.2, blk:.02 }, name:'Digicam 2001', size:[1600, 1200], inner:.6, sat:1.06, noise:.05, chromaN:.04, fringe:1, soft:.7, jpeg:.5, tint:[.97, 1.02, 1.01], lcd:[176, 132], lcdIn:[236, 177], af:900, write:2200, sharp:2.2, year:2001, smear:1.2, movie:[320, 240, 15], mbps:350000, awbIn:[1.1, 1, .8], label:'1.6" LCD', print:'2.1 Mega Pixels · Digital Camera', mp:'2M', maxZoom:2 },
+  phone05: { sig:{ sh:[.03, -.01, .045], hi:[.02, 0, .03], clip:.35, blk:.05 }, name:'Flip Phone 2005', size:[640, 480], inner:.5, sat:.94, noise:.085, chromaN:.07, fringe:.4, soft:.95, jpeg:.42, tint:[1.04, .96, 1.05], lcd:[128, 96], lcdIn:[236, 177], af:120, write:1600, sharp:1.1, year:2005, smear:0, movie:[176, 144, 15], mbps:110000, awbIn:[1.16, 1, .74], label:'1.9" screen', print:'VGA · Camera Phone', mp:'0.3M', maxZoom:4, noFlash:1, fps:7, shots:180, brand:'Camera Phone' },
+  webcam07: { sig:{ sh:[-.01, .02, .03], hi:[.03, .01, -.01], clip:.25, blk:-.04 }, name:'Webcam 2007', size:[1280, 960], inner:.55, sat:.86, noise:.07, chromaN:.05, fringe:.3, soft:.8, jpeg:.5, tint:[.98, 1.03, 1.04], lcd:[160, 120], lcdIn:[236, 177], af:0, write:500, sharp:1.2, year:2007, smear:0, movie:[320, 240, 15], mbps:300000, awbIn:[1.02, 1, 1.02], label:'built-in iSight', print:'1.3 MP · Built-in Camera', mp:'1.3M', maxZoom:2, noFlash:1, fps:15, shots:999, brand:'Webcam' },
+  bb09: { sig:{ sh:[0, .0, .03], hi:[-.01, 0, .03], clip:.15, blk:.03 }, name:'BlackBerry 2009', size:[2048, 1536], inner:.75, sat:1.1, noise:.045, chromaN:.03, fringe:.5, soft:.5, jpeg:.6, tint:[1.02, 1, .97], lcd:[240, 180], lcdIn:[296, 222], af:700, write:900, sharp:1.5, year:2009, smear:.3, movie:[320, 240, 24], mbps:600000, awbIn:[1.08, 1, .86], label:'2.4" screen', print:'3.2 MP · Flash · Smartphone', mp:'3.2M', maxZoom:2, fps:12, shots:850, brand:'Smartphone' },
+  digi11: { sig:{ sh:[.015, -.005, .03], hi:[-.01, 0, .02], clip:.05, blk:.04 }, name:'Cyber Flash 2011', size:[3000, 2250], inner:.95, sat:1.22, noise:.02, chromaN:.012, fringe:.35, soft:.2, jpeg:.84, tint:[1, 1, 1.02], lcd:[320, 240], lcdIn:[296, 222], af:300, write:450, sharp:1.4, year:2011, smear:.5, movie:[640, 480, 30], mbps:2500000, awbIn:[1.03, 1, .93], label:'3.0" LCD', print:'12.1 Mega Pixels · 5x Zoom · HD', mp:'12M', maxZoom:5, fps:24, shots:1260, brand:'Cyber Flash' },
+  digi06: { sig:{ sh:[-.005, 0, .02], hi:[.0, .0, .01], clip:.08, blk:.03 }, name:'Point & Shoot 2006', size:[2048, 1536], inner:.88, sat:1.3, noise:.03, chromaN:.02, fringe:.6, soft:.35, jpeg:.7, tint:[.99, 1, 1.03], lcd:[320, 240], lcdIn:[296, 222], af:420, write:700, sharp:1.6, year:2006, smear:.8, movie:[640, 480, 30], mbps:1400000, awbIn:[1.05, 1, .9], label:'2.5" LCD', print:'CCD · 7.2 Mega Pixels · 3x Optical Zoom', mp:'7M', maxZoom:6 }
 };
 const dM = () => DIGI[S.cam] || DIGI.digi06;
 const isRetro = () => !!(CAMS[S.cam] || {}).retro;
@@ -4665,11 +4680,11 @@ async function developDigi(job, M) {
     run('down', q1, { t:tSrc }, { dpx:[1 / q1.w, 1 / q1.h] }); blur(q1, q2, 1.2); blur(q1, q2, 2.4);
     const m1 = mk(qW, qH), m2 = mk(qW, qH); run('skin', m1, { t:tSrc }, { dpx:[1 / m1.w, 1 / m1.h] }); blur(m1, m2, 1.5); blur(m1, m2, 3);
     const a = meter(src), iso = Math.max(a.iso, job.meta.iso || 1);
-    const FF = await flashFacesFor(src, job.meta.flash);
+    const FF = await flashFacesFor(src, job.meta.flash), sv = shotVar(job.meta, S.cam === 'digi11' ? .7 : 1.2), sig = M.sig || { sh:[0, 0, 0], hi:[0, 0, 0], clip:0, blk:0 };
     const wb0 = job.meta.flash ? [.98, 1, 1.03] : indoorWB([1, 1, 1], M.awbIn, iso), wb = wb0.map((v, i) => v * M.tint[i]);
     const f1 = mk(W, H);
-    run('ccd', f1, { t:tSrc, tBlur:q1, tMean:m1, tNoise:NOISE }, { ...FF, res:[W, H], gain:a.gain * (job.meta.flash ? .9 : 1.05), wb, flash:job.meta.flash ? 1 : 0, sat:M.sat,
-      noise:M.noise * (.6 + iso * .7), chromaN:M.chromaN * (.5 + iso), fringe:M.fringe, soft:M.soft, smear:a.sun && a.sun.k > .002 && a.sun.k < .06 ? M.smear : 0, seed:[Math.random() * 512, Math.random() * 512] });
+    run('ccd', f1, { t:tSrc, tBlur:q1, tMean:m1, tNoise:NOISE }, { ...FF, shC:sig.sh, hiC:sig.hi, clipK:sig.clip, blk:sig.blk, res:[W, H], gain:a.gain * (job.meta.flash ? .9 : 1.05) * Math.pow(2, sv.ev), wb:wb.map((c, i) => c * sv.wb[i]), flash:job.meta.flash ? sv.fl : 0, sat:M.sat,
+      noise:M.noise * (.6 + iso * .7), chromaN:M.chromaN * (.5 + iso), fringe:M.fringe, soft:Math.min(1.2, M.soft + sv.focus * .8), smear:a.sun && a.sun.k > .002 && a.sun.k < .06 ? M.smear : 0, seed:[Math.random() * 512, Math.random() * 512] });
     const f2 = mk(W, H); run('nr', f2, { t:f1 }, { px:[1.1 / W, 1.1 / H], nrL:.3 + .1 * iso, nrC:.92, sig:.05 + .03 * iso });
     const f3 = mk(W, H); run('finish', f3, { t:f2, tBloom:BLACK, tStreak:BLACK, tHaze:BLACK }, { px:[1 / W, 1 / H], sharp:M.sharp, bloom:0, streak:0, haze:0 });
     const img = readFbo(f3);
@@ -4821,13 +4836,15 @@ async function developFilm(job) {
     run('down', q1, { t:tSrc }, { dpx:[1 / q1.w, 1 / q1.h] }); blur(q1, q2, 1); blur(q1, q2, 2);
     const m1 = mk(qW, qH), m2 = mk(qW, qH); run('skin', m1, { t:tSrc }, { dpx:[1 / m1.w, 1 / m1.h] }); blur(m1, m2, 1.5); blur(m1, m2, 3);
     const h1 = mk(qW, qH), h2 = mk(qW, qH); run('bright', h1, { t:tSrc }, { dpx:[1 / h1.w, 1 / h1.h], thr:.8 }); blur(h1, h2, 1.5); blur(h1, h2, 3);
-    const stops = clamp(((job.meta.iso || 1) - .95) * 2.2, 0, 3), under = stops / 3;
+    const sv = shotVar(job.meta, 1.3);
+    const stops = clamp(((job.meta.iso || 1) - .95) * 2.2 - sv.ev * 1.5, 0, 3), under = stops / 3;
+    const stock = clamp((job.cam === 'film98' ? .3 : job.instant ? .7 : (job.stock ?? 1)) + sv.hue, 0, 1);
     const leak = job.first ? .85 : Math.random() < .07 ? .35 + Math.random() * .3 : 0, side = Math.floor(Math.random() * 4);
     const leakPos = job.first ? [port ? .5 : -.08, port ? -.06 : .5] : [[-.1, Math.random()], [1.1, Math.random()], [Math.random(), -.1], [Math.random(), 1.1]][side];
     const f1 = mk(W, H);
-    run('film', f1, { t:tSrc, tBlur:q1, tMean:m1, tHal:h1 }, { ...(await flashFacesFor(src, job.meta.flash)), res:[W, H], expo:Math.pow(2, -stops * .35), flash:job.meta.flash ? 1 : 0, under, stock:job.stock ?? 1, leak, leakPos });
+    run('film', f1, { t:tSrc, tBlur:q1, tMean:m1, tHal:h1 }, { ...(await flashFacesFor(src, job.meta.flash)), res:[W, H], expo:Math.pow(2, -stops * .35 + sv.ev * .6), flash:job.meta.flash ? sv.fl : 0, under, stock, leak, leakPos });
     const f2 = mk(W, H); run('filmgrain', f2, { t:f1, tNoise:NOISE }, { res:[W, H], amt:1.25 + under * 1.5, seed:[Math.random() * 512, Math.random() * 512], size:1.85 });
-    const f3 = mk(W, H); run('finish', f3, { t:f2, tBloom:BLACK, tStreak:BLACK, tHaze:BLACK }, { px:[1 / W, 1 / H], sharp:.9, bloom:0, streak:0, haze:0 });
+    const f3 = mk(W, H); run('finish', f3, { t:f2, tBloom:BLACK, tStreak:BLACK, tHaze:BLACK }, { px:[1 / W, 1 / H], sharp:clamp(.9 - sv.focus * 1.4, 0, .9), bloom:0, streak:0, haze:0 });
     const img = readFbo(f3);
     const c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d'); x.putImageData(img, 0, 0);
     /* dust on the negative prints as white specks; now and then a hair */
@@ -5434,7 +5451,7 @@ document.addEventListener('visibilitychange', () => {
   if (vid.paused) vid.play().catch(() => {});
   CW.t = performance.now();
 });
-window.__tbc = { useVideoFile, vhsRec, prog, CAMS, RDB, FILEV, developFilm, rollDelete, restoreItem, renderRoll, rollLoad, S, B, VID, VE, RT, BT_DEF, setCam, develop, redevelop, renderEdit, fromFile, layout, setUI, setMode, openVideoEditor, startSeg, stopSeg, boothShoot, applyLook, LOOKS, AE, LF };
+window.__tbc = { developDigi, dM, useVideoFile, vhsRec, prog, CAMS, RDB, FILEV, developFilm, rollDelete, restoreItem, renderRoll, rollLoad, S, B, VID, VE, RT, BT_DEF, setCam, develop, redevelop, renderEdit, fromFile, layout, setUI, setMode, openVideoEditor, startSeg, stopSeg, boothShoot, applyLook, LOOKS, AE, LF };
 })();
 </script>
 </body></html>
