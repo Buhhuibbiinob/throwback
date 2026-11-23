@@ -1188,7 +1188,6 @@ html.th-grind #proCode{border-radius:0;background:#fff;color:#000;border:0;box-s
       <div class="row"><span>Theme<small>grind = black, white grunge n graffiti, 2003 skate game style. classic = 2012 iphone leather n wood</small></span><div class="seg" id="segTheme"><button type="button" data-v="grind">Grind</button><button type="button" data-v="classic">Classic</button></div></div>
       <div class="row"><span>Film develop time<small>disposable + 35mm: get your prints right away, or wait like a real photo lab</small></span><div class="seg" id="segDev"><button type="button" data-v="0">Now</button><button type="button" data-v="1h">1 hour</button><button type="button" data-v="am">Next AM</button></div></div>
       <div class="row"><span>Back up your Roll<small>saves every pic n vid into one file you can keep anywhere. restore puts them all back</small></span><span class="rowbtns"><button class="dbtn" id="bkSave" type="button">Back up</button><button class="dbtn" id="bkLoad" type="button">Restore</button></span></div>
-      <div class="row"><span>Camera packs<small id="proState">unlock every camera + videos with no logo</small></span><button class="dbtn go" id="proOpen" type="button">Unlock</button></div>
       <div class="row"><span>Yama TV logo<small>the lil spinning TV in the corner of every video you record</small></span><label class="sw"><input type="checkbox" id="bugOn" checked><i></i></label></div>
       <div class="row"><span>Soft skin<small>the camera softens pores n texture on skin a lil, but keeps eyes, lips n hair sharp</small></span><label class="sw"><input type="checkbox" id="softSkin" checked><i></i></label></div>
       <div class="row"><span>Grind color<small>the accent color on the grind theme</small></span><div class="seg" id="segAcc"><button type="button" data-v="orange">Orange</button><button type="button" data-v="green">Green</button></div></div>
@@ -6589,10 +6588,10 @@ const PACKS = [
   { id:'digi', n:'Old Digicams', cams:['digi01', 'digi04', 'floppy98', 'digi11'] }
 ];
 const PRO_HASH = 'cvyn9mqh80';
-const proOn = () => store.get('pro') === PRO_HASH;
+const proOn = () => true;  /* no paid packs: every camera is free for everyone */
 const camLocked = id => !proOn() && !PACKS[0].cams.includes(id);
 function syncPro() {
-  const on = proOn(); $('#proState').textContent = on ? 'everything unlocked. no logo needed' : 'unlock every camera + videos with no logo'; $('#proOpen').textContent = on ? 'Unlocked' : 'Unlock';
+  const on = proOn();
   document.querySelectorAll('#camGrid .ccard').forEach(b => b.classList.toggle('locked', camLocked(b.dataset.cam)));
   const bo = $('#bugOn'); if (bo) { bo.disabled = !on; if (!on) { bo.checked = true; S.bug = true; } }
 }
@@ -6600,7 +6599,7 @@ function openPro() {
   $('#packList').innerHTML = PACKS.slice(1).map(k => '<li><b>' + k.n + '</b><span>' + k.cams.map(c => CAMS[c].n).join(', ') + '</span></li>').join('') + '<li><b>No-logo videos</b><span>turn off the Yama TV logo</span></li>';
   $('#proErr').textContent = ''; $('#proCode').value = ''; $('#proSheet').hidden = false;
 }
-$('#proOpen').addEventListener('click', () => { if (!proOn()) openPro(); });
+
 $('#proX').addEventListener('click', () => { $('#proSheet').hidden = true; });
 $('#proGo').addEventListener('click', () => {
   const v = $('#proCode').value.trim().toLowerCase();
