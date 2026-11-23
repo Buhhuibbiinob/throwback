@@ -455,6 +455,47 @@ html.th-grind .readyban.in{transform:translate(-50%,0) rotate(-1deg)}
 html.th-grind .readyban b{font:400 19px/1 "TB Anton","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.04em}
 html.th-grind .readyban small{font:400 12px/1.1 "TB Condensed","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.05em;color:var(--acc)}
 html.th-grind .readyban img{border-radius:0;box-shadow:0 0 0 2px #fff;transform:rotate(3deg)}
+
+.xtools{position:absolute;z-index:32;left:calc(6*var(--u));top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:calc(6*var(--u))}
+.xtools button{position:relative;width:calc(34*var(--u));height:calc(34*var(--u));border-radius:50%;border:0;background:rgba(0,0,0,.45);color:#fff;display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(4px)}
+.xtools button .tic{width:calc(18*var(--u));height:calc(18*var(--u))}
+.xtools button.on{background:rgba(255,204,0,.9);color:#000}
+.xtools b{position:absolute;right:-4px;bottom:-4px;font:800 calc(9*var(--u))/1 var(--ui);background:#000;color:#ffcc00;border-radius:6px;padding:2px 3px}
+.xtools b:empty{display:none}
+.xcount{position:absolute;z-index:33;inset:0;display:grid;place-items:center;color:#fff;font:900 calc(110*var(--u))/1 var(--ui);text-shadow:0 4px 18px rgba(0,0,0,.6);pointer-events:none}
+.xcount[hidden]{display:none}
+.xcount.pop{animation:xpop .9s ease-out}
+@keyframes xpop{0%{transform:scale(1.6);opacity:0}20%{transform:scale(1);opacity:1}100%{transform:scale(.8);opacity:.2}}
+.xflash{position:absolute;inset:0;z-index:34;background:#fff;opacity:0;pointer-events:none}
+.xflash.go{animation:xfl .45s ease-out}
+@keyframes xfl{0%{opacity:.95}100%{opacity:0}}
+.xsizes{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:calc(6*var(--u));margin:calc(6*var(--u)) 0}
+.xsizes span{width:100%;text-align:center;color:#999;font:600 calc(11*var(--u))/1 var(--ui)}
+.xsizes button{border:1px solid #444;border-radius:calc(6*var(--u));background:#1c1c1e;color:#fff;padding:calc(7*var(--u)) calc(10*var(--u));font:600 calc(12*var(--u))/1 var(--ui);cursor:pointer}
+html.th-grind .xsizes button{border:0;border-radius:0;background:#f2f2f2;color:#000;box-shadow:2px 3px 0 #000;font:400 calc(13*var(--u))/1 "TB Anton","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.04em}
+html.th-grind .xsizes span{font-family:"TB Condensed","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.06em}
+.rowbtns{display:flex;gap:calc(5*var(--u))}
+.devwait{background:repeating-linear-gradient(45deg,#c9b48a,#c9b48a 8px,#bea67a 8px,#bea67a 16px) !important;display:grid !important;place-items:center}
+.devwait .lab{font:800 calc(10*var(--u))/1.2 var(--ui);font-style:normal;color:#3a2a10;text-align:center;letter-spacing:.06em}
+.devwait .lab small{font-weight:600;letter-spacing:0;text-transform:none}
+.ccard.locked .aicon::before{content:"";position:absolute;inset:0;z-index:3;background:rgba(0,0,0,.45) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='5' y='11' width='14' height='10' rx='2'/><path d='M8 11V7a4 4 0 0 1 8 0v4'/></svg>") center/40% no-repeat}
+.prosheet{position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.7);display:grid;place-items:center;padding:20px}
+.prosheet[hidden]{display:none}
+.probox{position:relative;width:min(92vw,380px);background:#141414;color:#fff;border-radius:14px;padding:22px 18px;box-shadow:0 10px 40px rgba(0,0,0,.7);font-family:var(--ui)}
+.probox h3{margin:0 0 12px;font:800 22px/1 var(--ui)}
+.proX{position:absolute;right:10px;top:8px;border:0;background:none;color:#aaa;font-size:28px;cursor:pointer}
+.packs{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column;gap:8px}
+.packs li{display:flex;flex-direction:column;gap:2px;background:#1f1f22;border-radius:8px;padding:9px 11px}
+.packs b{font:700 14px/1.1 var(--ui)} .packs span{font:500 12px/1.3 var(--ui);color:#aaa}
+.pronote{font:500 12px/1.35 var(--ui);color:#bbb;margin:0 0 10px}
+#proCode{width:100%;box-sizing:border-box;padding:11px 12px;border-radius:8px;border:1px solid #333;background:#000;color:#fff;font:600 16px var(--ui);margin-bottom:10px}
+#proGo{width:100%}
+.proerr{color:#ff6b6b;font:600 12px var(--ui);min-height:14px;margin:8px 0 0}
+html.th-grind .probox{border-radius:0;background:var(--ug-tags) 0 0/280px 280px,#070707;box-shadow:0 0 0 2px #eee,8px 9px 0 2px #000}
+html.th-grind .probox h3{font:400 30px/1 "TB Anton","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.03em}
+html.th-grind .packs li{border-radius:0;background:#111;box-shadow:0 0 0 1px #444}
+html.th-grind .packs b{font:400 16px/1 "TB Anton","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.04em;color:var(--acc)}
+html.th-grind #proCode{border-radius:0;background:#fff;color:#000;border:0;box-shadow:3px 3px 0 #000}
 #guLock .pbody.shake{animation:guShake .35s}
 @keyframes guShake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
 #guIn{flex:1 1 auto;min-width:0}
@@ -849,7 +890,9 @@ html.th-grind .readyban img{border-radius:0;box-shadow:0 0 0 2px #fff;transform:
         <button class="dbtn fmt" id="fmtBtn" type="button" aria-label="Photo shape">Square</button>
         <button class="dbtn go" id="vNext" type="button" hidden>Next</button>
       </div>
-      <div class="vf" id="vf"><div class="dvov" id="dvOv" hidden><b id="dvTxt">developing…</b><i><span id="dvBar"></span></i><button type="button" id="dvStop">Stop</button></div><div class="zchip" id="zChip" hidden></div><button class="filechip" id="fileChip" type="button" hidden>your video · tap to go back to the camera</button>
+      <div class="vf" id="vf"><div class="dvov" id="dvOv" hidden><b id="dvTxt">developing…</b><i><span id="dvBar"></span></i><button type="button" id="dvStop">Stop</button></div><div class="zchip" id="zChip" hidden></div>
+        <div class="xtools" id="xTools"><button type="button" id="xTimer" aria-label="Self-timer"><svg class="tic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 7v5l3 3" /></svg><b id="xTimerN"></b></button><button type="button" id="xBurst" aria-label="Burst flipbook"><svg class="tic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 4l-8 4l8 4l8 -4l-8 -4" /><path d="M4 12l8 4l8 -4" /><path d="M4 16l8 4l8 -4" /></svg></button><button type="button" id="xStrip" aria-label="Photo strip"><svg class="tic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12" /><path d="M4 12l16 0" /></svg></button></div>
+        <div class="xcount" id="xCount" hidden></div><div class="xflash" id="xFlash"></div><button class="filechip" id="fileChip" type="button" hidden>your video · tap to go back to the camera</button>
         <canvas id="vfOut" width="640" height="640"></canvas>
         <div class="grid" id="grid" hidden></div>
         <div class="focus" id="focus"></div>
@@ -1093,6 +1136,7 @@ html.th-grind .readyban img{border-radius:0;box-shadow:0 0 0 2px #fff;transform:
       <div class="meta" id="metaLine"></div>
       <button class="bigbtn" id="saveBtn" type="button">Save to Camera Roll</button>
       <p class="hint" id="saveHint">or press and hold the pic to save it</p>
+      <div class="xsizes" id="xSizes"><span>save sized for</span><button type="button" data-r="story">Story / TikTok</button><button type="button" data-r="post">Insta post</button><button type="button" data-r="square">Square</button></div>
       <button class="favbtn" id="favBtn" type="button"><svg class="tic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></svg> add to faves</button>
       <button class="linkbtn" id="delBtn" type="button">delete from roll</button>
     </div>
@@ -1142,15 +1186,18 @@ html.th-grind .readyban img{border-radius:0;box-shadow:0 0 0 2px #fff;transform:
       <div class="row"><span>Sun glow<small>soft glow off the sun n bright lights. streak adds the light beam</small></span><div class="seg" id="segFlare"><button type="button" data-v="off">Off</button><button type="button" data-v="glow">Glow</button><button type="button" data-v="streak">Streak</button></div></div>
       <div class="row"><span>Save size<small>era = the size that phone really saved at. 1080 = hd</small></span><div class="seg" id="segSize"><button type="button" data-v="era">Era</button><button type="button" data-v="hd">1080</button></div></div>
       <div class="row"><span>Theme<small>grind = black, white grunge n graffiti, 2003 skate game style. classic = 2012 iphone leather n wood</small></span><div class="seg" id="segTheme"><button type="button" data-v="grind">Grind</button><button type="button" data-v="classic">Classic</button></div></div>
+      <div class="row"><span>Film develop time<small>disposable + 35mm: get your prints right away, or wait like a real photo lab</small></span><div class="seg" id="segDev"><button type="button" data-v="0">Now</button><button type="button" data-v="1h">1 hour</button><button type="button" data-v="am">Next AM</button></div></div>
+      <div class="row"><span>Back up your Roll<small>saves every pic n vid into one file you can keep anywhere. restore puts them all back</small></span><span class="rowbtns"><button class="dbtn" id="bkSave" type="button">Back up</button><button class="dbtn" id="bkLoad" type="button">Restore</button></span></div>
+      <div class="row"><span>Camera packs<small id="proState">unlock every camera + videos with no logo</small></span><button class="dbtn go" id="proOpen" type="button">Unlock</button></div>
       <div class="row"><span>Yama TV logo<small>the lil spinning TV in the corner of every video you record</small></span><label class="sw"><input type="checkbox" id="bugOn" checked><i></i></label></div>
       <div class="row"><span>Soft skin<small>the camera softens pores n texture on skin a lil, but keeps eyes, lips n hair sharp</small></span><label class="sw"><input type="checkbox" id="softSkin" checked><i></i></label></div>
       <div class="row"><span>Grind color<small>the accent color on the grind theme</small></span><div class="seg" id="segAcc"><button type="button" data-v="orange">Orange</button><button type="button" data-v="green">Green</button></div></div>
       <div class="row"><span>Mac booth<small>the computer webcam version</small></span><button class="dbtn" id="toBooth" type="button">Open</button></div>
     </div>
-    <details class="credits"><summary>Photo, texture n font credits</summary><ul><li><b>Instagram card (iPhone 4)</b>: <a href="https://commons.wikimedia.org/wiki/File:White_iPhone_4,_5,_and_6.jpg" target="_blank" rel="noopener">White iPhone 4, 5, and 6.jpg</a> by Eric Jiang, CC BY-SA 4.0</li><li><b>Snapchat card (iPhone 6)</b>: <a href="https://commons.wikimedia.org/wiki/File:IPhone_6_&amp;_6_Plus.png" target="_blank" rel="noopener">IPhone 6 &amp; 6 Plus.png</a> by Ryse93, CC BY-SA 4.0</li><li><b>iPhone Camera card</b>: <a href="https://commons.wikimedia.org/wiki/File:Original_iPhone_-_iPhone_3G_-_iPhone_4_-_Flickr_-_Yutaka_Tsutano.jpg" target="_blank" rel="noopener">Original iPhone - iPhone 3G - iPhone 4 - Flickr - Yutaka Tsutano.jpg</a> by Yutaka Tsutano from Lincoln, United Stat, CC BY 2.0</li><li><b>Flip Phone</b>: <a href="https://commons.wikimedia.org/wiki/File:Motorola_RAZR_V3-4901.jpg" target="_blank" rel="noopener">Motorola RAZR V3-4901.jpg</a> by Raimond Spekking, CC BY-SA 4.0</li><li><b>Webcam</b>: <a href="https://commons.wikimedia.org/wiki/File:Logitech_Quickcam_Pro_4000.jpg" target="_blank" rel="noopener">Logitech Quickcam Pro 4000.jpg</a> by Dave Pape, Public domain</li><li><b>BlackBerry</b>: <a href="https://commons.wikimedia.org/wiki/File:BlackBerry_Curve_9320_front.jpg" target="_blank" rel="noopener">BlackBerry Curve 9320 front.jpg</a> by Gomera-b, CC BY-SA 3.0</li><li><b>Digicam</b>: <a href="https://commons.wikimedia.org/wiki/File:Sony_DSC-P1.jpg" target="_blank" rel="noopener">Sony DSC-P1.jpg</a> by a Wikimedia Commons contributor, CC BY-SA 3.0</li><li><b>Point &amp; Shoot</b>: <a href="https://commons.wikimedia.org/wiki/File:Canon_Digital_IXUS_850_IS-ar_4to3-fs_PNr°0268a.jpg" target="_blank" rel="noopener">Canon Digital IXUS 850 IS-ar 4to3-fs PNr°0268a.jpg</a> by D-Kuru, CC BY-SA 3.0 at</li><li><b>Cyber Flash</b>: <a href="https://commons.wikimedia.org/wiki/File:SONY_Cyber-_shot_DSC_HyperXoom_20_V_2.JPG" target="_blank" rel="noopener">SONY Cyber- shot DSC HyperXoom 20 V 2.JPG</a> by Blackwhiteupl, CC BY 3.0 us</li><li><b>35mm Point &amp; Shoot</b>: <a href="https://commons.wikimedia.org/wiki/File:20210223_Olympus_Mju_II_019.jpg" target="_blank" rel="noopener">20210223 Olympus Mju II 019.jpg</a> by Zinnmann, CC BY-SA 3.0</li><li><b>Instant</b>: <a href="https://commons.wikimedia.org/wiki/File:Polaroid_SX-70_Sonar_One_Step_(4665241093).jpg" target="_blank" rel="noopener">Polaroid SX-70 Sonar One Step (4665241093).jpg</a> by Martin Taylor from San Francisco, CA, US, CC BY 2.0</li><li><b>Disposable</b>: <a href="https://commons.wikimedia.org/wiki/File:Kodak_Flash_Single_Use_Camera_(28920754637).jpg" target="_blank" rel="noopener">Kodak Flash Single Use Camera (28920754637).jpg</a> by Matthew Paul  Argall from Australia, CC BY 2.0</li><li><b>Camcorder</b>: <a href="https://commons.wikimedia.org/wiki/File:Camcorder_VHS-C,_Panasonic_NV-RX17.jpg" target="_blank" rel="noopener">Camcorder VHS-C, Panasonic NV-RX17.jpg</a> by Zalasem1, CC BY 4.0</li><li><b>MiniDV</b>: <a href="https://commons.wikimedia.org/wiki/File:Videocamera_a_batteria,_digitale,_Mini_DV_-_Museo_scienza_tecnologia_Milano_14879.jpg" target="_blank" rel="noopener">Videocamera a batteria, digitale, Mini DV - Museo scienza tecnologia Milano 14879.jpg</a> by Sharp Corporation (progettista/ costrut, CC BY-SA 4.0</li><li><b>Flip Video</b>: <a href="https://commons.wikimedia.org/wiki/File:Flip_Video.jpg" target="_blank" rel="noopener">Flip Video.jpg</a> by Ged Carroll from London, UK, CC BY 2.0</li><li><b>Roll icon</b>: <a href="https://commons.wikimedia.org/wiki/File:35mm_Film_Canisters_(18541635532).jpg" target="_blank" rel="noopener">35mm Film Canisters (18541635532).jpg</a> by Tony Webster from Minneapolis, Minnesota, CC BY-SA 2.0</li><li><b>Edit icon</b>: <a href="https://commons.wikimedia.org/wiki/File:Brushes_2.jpg" target="_blank" rel="noopener">Brushes 2.jpg</a> by Hans Bernhard (Schnobby), CC BY-SA 3.0</li><li><b>Vid thru icon</b>: <a href="https://commons.wikimedia.org/wiki/File:35mm_blank_film_(6498625859)_(cropped_version).jpg" target="_blank" rel="noopener">35mm blank film (6498625859) (cropped version).jpg</a> by DRs  Kulturarvsprojekt from Copenhagen,, CC BY-SA 2.0</li><li><b>Settings icon</b>: <a href="https://commons.wikimedia.org/wiki/File:Gears_-_Thomas_Claveirole.jpg" target="_blank" rel="noopener">Gears - Thomas Claveirole.jpg</a> by Thomas Claveirole, CC BY-SA 2.0</li><li><b>Pro DSLR</b>: <a href="https://commons.wikimedia.org/wiki/File:Canon_EOS_5D_Mark_II_with_50mm_1.4_edit1.jpg" target="_blank" rel="noopener">Canon EOS 5D Mark II with 50mm 1.4 edit1.jpg</a> by Charles Lanteigne, edited by jjron, CC BY-SA 3.0</li><li><b>EasyShot</b>: <a href="https://commons.wikimedia.org/wiki/File:Kodak_C310.jpeg" target="_blank" rel="noopener">Kodak C310.jpeg</a> by Stu, public domain</li><li><b>Floppy Cam</b>: <a href="https://commons.wikimedia.org/wiki/File:Sony_Mavica_FD-90_digital_camera_(52215591859).jpg" target="_blank" rel="noopener">Sony Mavica FD-90 digital camera (52215591859).jpg</a> by Chi Ho Chan from Hong Kong, CC BY 2.0</li><li><b>Leather, linen n wood textures</b>: Poly Haven (polyhaven.com), CC0</li><li><b>Grind theme textures</b> (graffiti tags, peeling paint, plaster, rust grunge): ambientCG (ambientcg.com), CC0</li><li><b>Paint splatter</b>: "Splattered white paint 2" on Wikimedia Commons, CC0</li><li><b>Grind lettering</b>: made with Anton (Google Fonts), SIL Open Font License</li><li><b>Icons</b>: Tabler Icons (tabler.io), MIT License</li><li><b>Camera sounds</b>: "Holga shuttersound" by Doitashimashite (public domain) n "Canon T50 shutter noise" by Francois C (CC BY-SA 3.0), both on Wikimedia Commons</li><li><b>Camera body, paper, tape n subway tile textures</b>: ambientCG (ambientcg.com), CC0</li><li><b>Sketchbook fonts</b>: Sedgwick Ave, Sedgwick Ave Display, Rock Salt, Knewave, Covered By Your Grace, Gochi Hand, Reenie Beanie, Nothing You Could Do, Sue Ellen Francisco, Marck Script, Cedarville Cursive, Homemade Apple (Google Fonts), SIL Open Font License</li><li><b>Fonts</b>: Playfair Display, Roboto Condensed, Inter, Archivo Black, Pacifico, Lobster, Bebas Neue, Permanent Marker, Special Elite, Amatic SC, Great Vibes, Shadows Into Light, Press Start 2P, Monoton, Anton (Google Fonts) n DSEG7 Classic, SIL Open Font License</li></ul></details>
+    <details class="credits"><summary>Photo, texture n font credits</summary><ul><li><b>Instagram card (iPhone 4)</b>: <a href="https://commons.wikimedia.org/wiki/File:White_iPhone_4,_5,_and_6.jpg" target="_blank" rel="noopener">White iPhone 4, 5, and 6.jpg</a> by Eric Jiang, CC BY-SA 4.0</li><li><b>Snapchat card (iPhone 6)</b>: <a href="https://commons.wikimedia.org/wiki/File:IPhone_6_&amp;_6_Plus.png" target="_blank" rel="noopener">IPhone 6 &amp; 6 Plus.png</a> by Ryse93, CC BY-SA 4.0</li><li><b>iPhone Camera card</b>: <a href="https://commons.wikimedia.org/wiki/File:Original_iPhone_-_iPhone_3G_-_iPhone_4_-_Flickr_-_Yutaka_Tsutano.jpg" target="_blank" rel="noopener">Original iPhone - iPhone 3G - iPhone 4 - Flickr - Yutaka Tsutano.jpg</a> by Yutaka Tsutano from Lincoln, United Stat, CC BY 2.0</li><li><b>Flip Phone</b>: <a href="https://commons.wikimedia.org/wiki/File:Motorola_RAZR_V3-4901.jpg" target="_blank" rel="noopener">Motorola RAZR V3-4901.jpg</a> by Raimond Spekking, CC BY-SA 4.0</li><li><b>Webcam</b>: <a href="https://commons.wikimedia.org/wiki/File:Logitech_Quickcam_Pro_4000.jpg" target="_blank" rel="noopener">Logitech Quickcam Pro 4000.jpg</a> by Dave Pape, Public domain</li><li><b>BlackBerry</b>: <a href="https://commons.wikimedia.org/wiki/File:BlackBerry_Curve_9320_front.jpg" target="_blank" rel="noopener">BlackBerry Curve 9320 front.jpg</a> by Gomera-b, CC BY-SA 3.0</li><li><b>Digicam</b>: <a href="https://commons.wikimedia.org/wiki/File:Sony_DSC-P1.jpg" target="_blank" rel="noopener">Sony DSC-P1.jpg</a> by a Wikimedia Commons contributor, CC BY-SA 3.0</li><li><b>Point &amp; Shoot</b>: <a href="https://commons.wikimedia.org/wiki/File:Canon_Digital_IXUS_850_IS-ar_4to3-fs_PNr°0268a.jpg" target="_blank" rel="noopener">Canon Digital IXUS 850 IS-ar 4to3-fs PNr°0268a.jpg</a> by D-Kuru, CC BY-SA 3.0 at</li><li><b>Cyber Flash</b>: <a href="https://commons.wikimedia.org/wiki/File:SONY_Cyber-_shot_DSC_HyperXoom_20_V_2.JPG" target="_blank" rel="noopener">SONY Cyber- shot DSC HyperXoom 20 V 2.JPG</a> by Blackwhiteupl, CC BY 3.0 us</li><li><b>35mm Point &amp; Shoot</b>: <a href="https://commons.wikimedia.org/wiki/File:20210223_Olympus_Mju_II_019.jpg" target="_blank" rel="noopener">20210223 Olympus Mju II 019.jpg</a> by Zinnmann, CC BY-SA 3.0</li><li><b>Instant</b>: <a href="https://commons.wikimedia.org/wiki/File:Polaroid_SX-70_Sonar_One_Step_(4665241093).jpg" target="_blank" rel="noopener">Polaroid SX-70 Sonar One Step (4665241093).jpg</a> by Martin Taylor from San Francisco, CA, US, CC BY 2.0</li><li><b>Disposable</b>: <a href="https://commons.wikimedia.org/wiki/File:Kodak_Flash_Single_Use_Camera_(28920754637).jpg" target="_blank" rel="noopener">Kodak Flash Single Use Camera (28920754637).jpg</a> by Matthew Paul  Argall from Australia, CC BY 2.0</li><li><b>Camcorder</b>: <a href="https://commons.wikimedia.org/wiki/File:Camcorder_VHS-C,_Panasonic_NV-RX17.jpg" target="_blank" rel="noopener">Camcorder VHS-C, Panasonic NV-RX17.jpg</a> by Zalasem1, CC BY 4.0</li><li><b>MiniDV</b>: <a href="https://commons.wikimedia.org/wiki/File:Videocamera_a_batteria,_digitale,_Mini_DV_-_Museo_scienza_tecnologia_Milano_14879.jpg" target="_blank" rel="noopener">Videocamera a batteria, digitale, Mini DV - Museo scienza tecnologia Milano 14879.jpg</a> by Sharp Corporation (progettista/ costrut, CC BY-SA 4.0</li><li><b>Flip Video</b>: <a href="https://commons.wikimedia.org/wiki/File:Flip_Video.jpg" target="_blank" rel="noopener">Flip Video.jpg</a> by Ged Carroll from London, UK, CC BY 2.0</li><li><b>Roll icon</b>: <a href="https://commons.wikimedia.org/wiki/File:35mm_Film_Canisters_(18541635532).jpg" target="_blank" rel="noopener">35mm Film Canisters (18541635532).jpg</a> by Tony Webster from Minneapolis, Minnesota, CC BY-SA 2.0</li><li><b>Edit icon</b>: <a href="https://commons.wikimedia.org/wiki/File:Brushes_2.jpg" target="_blank" rel="noopener">Brushes 2.jpg</a> by Hans Bernhard (Schnobby), CC BY-SA 3.0</li><li><b>Vid thru icon</b>: <a href="https://commons.wikimedia.org/wiki/File:35mm_blank_film_(6498625859)_(cropped_version).jpg" target="_blank" rel="noopener">35mm blank film (6498625859) (cropped version).jpg</a> by DRs  Kulturarvsprojekt from Copenhagen,, CC BY-SA 2.0</li><li><b>Settings icon</b>: <a href="https://commons.wikimedia.org/wiki/File:Gears_-_Thomas_Claveirole.jpg" target="_blank" rel="noopener">Gears - Thomas Claveirole.jpg</a> by Thomas Claveirole, CC BY-SA 2.0</li><li><b>Pro DSLR</b>: <a href="https://commons.wikimedia.org/wiki/File:Canon_EOS_5D_Mark_II_with_50mm_1.4_edit1.jpg" target="_blank" rel="noopener">Canon EOS 5D Mark II with 50mm 1.4 edit1.jpg</a> by Charles Lanteigne, edited by jjron, CC BY-SA 3.0</li><li><b>EasyShot</b>: <a href="https://commons.wikimedia.org/wiki/File:Kodak_C310.jpeg" target="_blank" rel="noopener">Kodak C310.jpeg</a> by Stu, public domain</li><li><b>Floppy Cam</b>: <a href="https://commons.wikimedia.org/wiki/File:Sony_Mavica_FD-90_digital_camera_(52215591859).jpg" target="_blank" rel="noopener">Sony Mavica FD-90 digital camera (52215591859).jpg</a> by Chi Ho Chan from Hong Kong, CC BY 2.0</li><li><b>Leather, linen n wood textures</b>: Poly Haven (polyhaven.com), CC0</li><li><b>Grind theme textures</b> (graffiti tags, peeling paint, plaster, rust grunge): ambientCG (ambientcg.com), CC0</li><li><b>Paint splatter</b>: "Splattered white paint 2" on Wikimedia Commons, CC0</li><li><b>Grind lettering</b>: made with Anton (Google Fonts), SIL Open Font License</li><li><b>Icons</b>: Tabler Icons (tabler.io), MIT License</li><li><b>GIF maker</b>: gifenc by Matt DesLauriers, MIT License</li><li><b>Camera sounds</b>: "Holga shuttersound" by Doitashimashite (public domain) n "Canon T50 shutter noise" by Francois C (CC BY-SA 3.0), both on Wikimedia Commons</li><li><b>Camera body, paper, tape n subway tile textures</b>: ambientCG (ambientcg.com), CC0</li><li><b>Sketchbook fonts</b>: Sedgwick Ave, Sedgwick Ave Display, Rock Salt, Knewave, Covered By Your Grace, Gochi Hand, Reenie Beanie, Nothing You Could Do, Sue Ellen Francisco, Marck Script, Cedarville Cursive, Homemade Apple (Google Fonts), SIL Open Font License</li><li><b>Fonts</b>: Playfair Display, Roboto Condensed, Inter, Archivo Black, Pacifico, Lobster, Bebas Neue, Permanent Marker, Special Elite, Amatic SC, Great Vibes, Shadows Into Light, Press Start 2P, Monoton, Anton (Google Fonts) n DSEG7 Classic, SIL Open Font License</li></ul></details>
   </section>
   <section class="sheet" id="rollSheet" aria-label="Roll" hidden>
-    <header><h2>Roll</h2><img class="ghead gonly" alt="Roll" src="data:image/png;base64,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"><div class="hbtns"><button class="dbtn" id="saveAllBtn" type="button">Save all</button><button class="dbtn" id="importBtn" type="button">Import</button><button class="dbtn icon" id="setBtn" type="button" aria-label="Settings"><svg class="ico" viewBox="0 0 24 24" style="width:calc(17*var(--u));height:calc(17*var(--u))"><circle cx="12" cy="12" r="7.9" fill="none" stroke="#d9dcdf" stroke-width="4.2" stroke-dasharray="2.75 2.45"/><circle cx="12" cy="12" r="6.2" class="g"/><circle cx="12" cy="12" r="2.4" fill="#2a2d31"/></svg></button><button class="dbtn go" id="rollClose" type="button">Done</button></div></header>
+    <header><h2>Roll</h2><img class="ghead gonly" alt="Roll" src="data:image/png;base64,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"><div class="hbtns"><button class="dbtn" id="saveAllBtn" type="button">Save all</button><button class="dbtn" id="tapeBtn" type="button">Make a tape</button><button class="dbtn" id="importBtn" type="button">Import</button><button class="dbtn icon" id="setBtn" type="button" aria-label="Settings"><svg class="ico" viewBox="0 0 24 24" style="width:calc(17*var(--u));height:calc(17*var(--u))"><circle cx="12" cy="12" r="7.9" fill="none" stroke="#d9dcdf" stroke-width="4.2" stroke-dasharray="2.75 2.45"/><circle cx="12" cy="12" r="6.2" class="g"/><circle cx="12" cy="12" r="2.4" fill="#2a2d31"/></svg></button><button class="dbtn go" id="rollClose" type="button">Done</button></div></header>
     <div class="rtabs" id="rTabs"><button type="button" data-v="all" class="on">All</button><button type="button" data-v="fav"><svg class="tic" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" ><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M6.979 3.074a6 6 0 0 1 4.988 1.425l.037 .033l.034 -.03a6 6 0 0 1 4.733 -1.44l.246 .036a6 6 0 0 1 3.364 10.008l-.18 .185l-.048 .041l-7.45 7.379a1 1 0 0 1 -1.313 .082l-.094 -.082l-7.493 -7.422a6 6 0 0 1 3.176 -10.215z" /></svg> Faves</button><button type="button" data-v="trash">Deleted</button></div>
     <div class="rollgrid" id="rollGrid"></div>
     <div class="rbook gonly" id="rBook"><div class="rpage" id="rPage"></div></div>
@@ -1164,6 +1211,11 @@ html.th-grind .readyban img{border-radius:0;box-shadow:0 0 0 2px #fff;transform:
   <input type="file" id="fileVid" accept="video/*" capture="user" hidden>
   <input type="file" id="fileThru" accept="video/*" hidden>
   <input type="file" id="fileUp" accept="image/*,video/*" hidden>
+  <input type="file" id="fileBk" accept=".zip,application/zip" hidden>
+  <div class="prosheet" id="proSheet" hidden><div class="probox"><button class="proX" id="proX" type="button" aria-label="Close">&times;</button><h3>Camera packs</h3>
+    <ul class="packs" id="packList"></ul>
+    <p class="pronote">buying is coming soon. got a code? put it in to unlock everything</p>
+    <input id="proCode" type="password" autocomplete="off" autocapitalize="off" placeholder="unlock code"><button class="bigbtn" id="proGo" type="button">Unlock</button><p class="proerr" id="proErr"></p></div></div>
   <button class="readyban" id="readyBan" type="button" hidden><img alt=""><span><b>your pic is ready</b><small>it's in your Roll &middot; tap to see it</small></span></button>
   <input type="file" id="fileAny" accept="image/*,video/*" hidden>
   <input type="file" id="fileRetro" accept="image/*" hidden>
@@ -3479,8 +3531,9 @@ seg('#segSound', v => { S.sound = v === '1'; store.set('sound', S.sound); });
 seg('#segSize', v => { S.saveSize = v; store.set('saveSize', v); });
 S.softSkin = store.get('softSkin', true) !== false;
 S.bug = store.get('bug', true) !== false;
-$('#bugOn') && ($('#bugOn').checked = S.bug); $('#bugOn') && $('#bugOn').addEventListener('change', e => { S.bug = e.target.checked; store.set('bug', S.bug); });
+$('#bugOn') && ($('#bugOn').checked = S.bug); $('#bugOn') && $('#bugOn').addEventListener('change', e => { if (!proOn()) { e.target.checked = true; S.bug = true; openPro(); return; } S.bug = e.target.checked; store.set('bug', S.bug); });
 $('#softSkin') && ($('#softSkin').checked = S.softSkin); $('#softSkin') && $('#softSkin').addEventListener('change', e => { S.softSkin = e.target.checked; store.set('softSkin', S.softSkin); });
+seg('#segDev', v => { S.devWait = v; store.set('devWait', v); hud(v === '0' ? 'prints come right away' : v === '1h' ? 'prints take an hour, like a 1 hour photo lab' : 'prints ready the next morning'); });
 seg('#segAcc', v => { store.set('acc', v); document.documentElement.classList.toggle('acc-green', v === 'green'); });
 seg('#segTheme', v => { store.set('theme', v); document.documentElement.classList.toggle('th-grind', v === 'grind'); renderRoll(); hud(v === 'grind' ? 'grind theme on' : 'classic theme on'); });
 const GLOW_MSG = { glow:'Sun Glow', streak:'Sun Glow + Streak', off:'Sun Glow Off' };
@@ -3762,7 +3815,7 @@ function loop(t) {
   if (!live) { (K.idle || staticFrame)(vfx, vfOut.width, vfOut.height); return; }
   if (Math.abs(videoAspect() - vfOut.width / vfOut.height) > .02) layout();
   const drew = K.frame(vid, isFront(), AE, t, vfx, vfOut.width, vfOut.height);
-  if (drew && S.bug && BUG.rec > 0) drawBug(vfx, vfOut.width, vfOut.height, t);
+  if (drew && (S.bug || !proOn()) && BUG.rec > 0) drawBug(vfx, vfOut.width, vfOut.height, t);
   if (drew && CAP.size) capFrame(vfOut);
   if (drew && S.openPending) { S.openPending = false; if (K.opened) K.opened(); }
 }
@@ -4465,7 +4518,7 @@ function endPress(e) {
 }
 shutter.addEventListener('pointerup', endPress);
 shutter.addEventListener('pointercancel', endPress);
-shutter.addEventListener('click', e => { if (e.detail === 0) { if (S.mode === 'video') openVideoPicker(true); else shoot(); } });
+shutter.addEventListener('click', e => { if (e.detail === 0) { if (S.mode === 'video') openVideoPicker(true); else if (X.timer) timedShutter(); else shoot(); } });
 $('#libBtn').addEventListener('click', () => {
   if (S.mode === 'video') { openVideoPicker(false); return; }
   if (S.roll.length) openRollItem(S.roll[0]); else openPicker(false);
@@ -4693,7 +4746,7 @@ function iosGridFrame(src, mirror, ae, t, ctx, ow, oh) {
   x.restore();
   return true;
 }
-$('#ioShut').addEventListener('click', () => shoot());
+$('#ioShut').addEventListener('click', () => { if (X.timer && !iosRecS && S.iosMode !== 'video') timedShutter(); else shoot(); });
 $('#ioFlash').addEventListener('click', () => { S.flash = S.flash === 'auto' ? 'on' : S.flash === 'on' ? 'off' : 'auto'; store.set('flash', S.flash); syncIos(); syncFlash(); });
 $('#ioHdr').addEventListener('click', () => { S.hdr = !S.hdr; store.set('hdr', S.hdr); syncIos(); });
 $('#ioFlip').addEventListener('click', flipCamera);
@@ -4763,7 +4816,7 @@ function buildCamSheet() {
     b.innerHTML = PHOTO_ICON[k] ? '<span class="aicon cico photo"><img alt="" src="' + PHOTO_ICON[k] + '"></span><b></b><i></i><small></small>'
       : '<span class="aicon cico" style="--c1:' + (CICO[k] || CICO.ig)[1] + ';--c2:' + (CICO[k] || CICO.ig)[2] + '"><svg viewBox="0 0 40 40">' + CGLYPH[(CICO[k] || CICO.ig)[0]] + '</svg></span><b></b><i></i><small></small>';
     b.children[1].textContent = C.n; b.children[2].textContent = era; b.children[3].textContent = desc;
-    b.addEventListener('click', () => { const wasHome = S.home; S.home = false; $('#camSheet').classList.remove('home'); $('#camClose').textContent = 'Done'; closeSheets(true); setCam(k); if (wasHome && !S.live && !FILEV.on) startCamera(); });
+    b.addEventListener('click', () => { if (camLocked(k)) { openPro(); return; } const wasHome = S.home; S.home = false; $('#camSheet').classList.remove('home'); $('#camClose').textContent = 'Done'; closeSheets(true); setCam(k); if (wasHome && !S.live && !FILEV.on) startCamera(); });
     g.appendChild(b);
   });
   $('#camTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) showCat(b.dataset.c); });
@@ -5160,7 +5213,7 @@ async function digiMovie() {
   RT.rec = { rec:r.rec, done:r.done, t0:performance.now(), poster:vfOut.toDataURL('image/jpeg', .7) };
 }
 $('#dShut').addEventListener('pointerdown', e => e.stopPropagation());
-$('#dShut').addEventListener('click', () => { getAC(); digiShutter(); });
+$('#dShut').addEventListener('click', () => { getAC(); if (X.timer && RT.digiMode !== 'movie') timedShutter(); else digiShutter(); });
 $('#dPlay').addEventListener('click', () => { if (RT.busy || RT.rec) return; if (RT.play) exitPlay(); else enterPlay(); });
 $('#dMenu').addEventListener('click', () => openRMenu());
 $('#dRot').addEventListener('click', () => turnRetro());
@@ -5329,7 +5382,10 @@ async function dispDevelop() {
   const roll = RT.roll; RT.roll = []; RT.left = 27; RT.wound = true; RT.rollNo++; store.set('rollNo', RT.rollNo); syncDisp();
   const d = $('#pDev'); d.hidden = false; $('#pDevTxt').textContent = 'Developing ' + roll.length + (roll.length === 1 ? ' picture…' : ' pictures…');
   const [prints] = await Promise.all([Promise.all(roll.map(r => r.p)), wait(2400)]);
-  const ok = prints.filter(Boolean); ok.forEach(p => S.roll.unshift(p)); trimRoll(); renderRoll(); if (ok[0]) setLibThumb(ok[ok.length - 1].url);
+  const ok = prints.filter(Boolean), until = devReadyAt(Date.now()); if (until) ok.forEach(p => { p.devUntil = until; });
+  ok.forEach(p => S.roll.unshift(p)); trimRoll(); renderRoll();
+  if (until) { d.hidden = true; hud('dropped your roll off at the lab. prints ready ' + fmtReady(until)); return; }
+  if (ok[0]) setLibThumb(ok[ok.length - 1].url);
   d.hidden = true; showPrints(ok);
 }
 function showPrints(list) {
@@ -5340,7 +5396,7 @@ function showPrints(list) {
   });
   openSheet('#printSheet');
 }
-$('#pShut').addEventListener('click', dispShutter);
+$('#pShut').addEventListener('click', () => { if (X.timer) timedShutter(); else dispShutter(); });
 $('#pLab').addEventListener('click', dispDevelop);
 $('#pCams').addEventListener('click', () => openRMenu());
 $('#pRot').addEventListener('click', () => turnRetro());
@@ -5542,6 +5598,1016 @@ async function uploadToCam(file) {
   showBusy(false);
   if (S.roll[0] && S.roll[0] !== before) readyBanner(S.roll[0]);
 }
+
+/* ===================== extras: timer, burst flipbook, photo strip ===================== */
+const GIFENC = (function () { var exports = {}; var __defProp = Object.defineProperty;
+var __markAsModule = (target) => __defProp(target, "__esModule", {value: true});
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, {get: all[name], enumerable: true});
+};
+
+// src/index.js
+__markAsModule(exports);
+__export(exports, {
+  GIFEncoder: () => GIFEncoder,
+  applyPalette: () => applyPalette,
+  default: () => src_default,
+  nearestColor: () => nearestColor,
+  nearestColorIndex: () => nearestColorIndex,
+  nearestColorIndexWithDistance: () => nearestColorIndexWithDistance,
+  prequantize: () => prequantize,
+  quantize: () => quantize,
+  snapColorsToPalette: () => snapColorsToPalette
+});
+
+// src/constants.js
+var constants_default = {
+  signature: "GIF",
+  version: "89a",
+  trailer: 59,
+  extensionIntroducer: 33,
+  applicationExtensionLabel: 255,
+  graphicControlExtensionLabel: 249,
+  imageSeparator: 44,
+  signatureSize: 3,
+  versionSize: 3,
+  globalColorTableFlagMask: 128,
+  colorResolutionMask: 112,
+  sortFlagMask: 8,
+  globalColorTableSizeMask: 7,
+  applicationIdentifierSize: 8,
+  applicationAuthCodeSize: 3,
+  disposalMethodMask: 28,
+  userInputFlagMask: 2,
+  transparentColorFlagMask: 1,
+  localColorTableFlagMask: 128,
+  interlaceFlagMask: 64,
+  idSortFlagMask: 32,
+  localColorTableSizeMask: 7
+};
+
+// src/stream.js
+function createStream(initialCapacity = 256) {
+  let cursor = 0;
+  let contents = new Uint8Array(initialCapacity);
+  return {
+    get buffer() {
+      return contents.buffer;
+    },
+    reset() {
+      cursor = 0;
+    },
+    bytesView() {
+      return contents.subarray(0, cursor);
+    },
+    bytes() {
+      return contents.slice(0, cursor);
+    },
+    writeByte(byte) {
+      expand(cursor + 1);
+      contents[cursor] = byte;
+      cursor++;
+    },
+    writeBytes(data, offset = 0, byteLength = data.length) {
+      expand(cursor + byteLength);
+      for (let i = 0; i < byteLength; i++) {
+        contents[cursor++] = data[i + offset];
+      }
+    },
+    writeBytesView(data, offset = 0, byteLength = data.byteLength) {
+      expand(cursor + byteLength);
+      contents.set(data.subarray(offset, offset + byteLength), cursor);
+      cursor += byteLength;
+    }
+  };
+  function expand(newCapacity) {
+    var prevCapacity = contents.length;
+    if (prevCapacity >= newCapacity)
+      return;
+    var CAPACITY_DOUBLING_MAX = 1024 * 1024;
+    newCapacity = Math.max(newCapacity, prevCapacity * (prevCapacity < CAPACITY_DOUBLING_MAX ? 2 : 1.125) >>> 0);
+    if (prevCapacity != 0)
+      newCapacity = Math.max(newCapacity, 256);
+    const oldContents = contents;
+    contents = new Uint8Array(newCapacity);
+    if (cursor > 0)
+      contents.set(oldContents.subarray(0, cursor), 0);
+  }
+}
+
+// src/lzwEncode.js
+var BITS = 12;
+var DEFAULT_HSIZE = 5003;
+var MASKS = [
+  0,
+  1,
+  3,
+  7,
+  15,
+  31,
+  63,
+  127,
+  255,
+  511,
+  1023,
+  2047,
+  4095,
+  8191,
+  16383,
+  32767,
+  65535
+];
+function lzwEncode(width, height, pixels, colorDepth, outStream = createStream(512), accum = new Uint8Array(256), htab = new Int32Array(DEFAULT_HSIZE), codetab = new Int32Array(DEFAULT_HSIZE)) {
+  const hsize = htab.length;
+  const initCodeSize = Math.max(2, colorDepth);
+  accum.fill(0);
+  codetab.fill(0);
+  htab.fill(-1);
+  let cur_accum = 0;
+  let cur_bits = 0;
+  const init_bits = initCodeSize + 1;
+  const g_init_bits = init_bits;
+  let clear_flg = false;
+  let n_bits = g_init_bits;
+  let maxcode = (1 << n_bits) - 1;
+  const ClearCode = 1 << init_bits - 1;
+  const EOFCode = ClearCode + 1;
+  let free_ent = ClearCode + 2;
+  let a_count = 0;
+  let ent = pixels[0];
+  let hshift = 0;
+  for (let fcode = hsize; fcode < 65536; fcode *= 2) {
+    ++hshift;
+  }
+  hshift = 8 - hshift;
+  outStream.writeByte(initCodeSize);
+  output(ClearCode);
+  const length = pixels.length;
+  for (let idx = 1; idx < length; idx++) {
+    next_block: {
+      const c = pixels[idx];
+      const fcode = (c << BITS) + ent;
+      let i = c << hshift ^ ent;
+      if (htab[i] === fcode) {
+        ent = codetab[i];
+        break next_block;
+      }
+      const disp = i === 0 ? 1 : hsize - i;
+      while (htab[i] >= 0) {
+        i -= disp;
+        if (i < 0)
+          i += hsize;
+        if (htab[i] === fcode) {
+          ent = codetab[i];
+          break next_block;
+        }
+      }
+      output(ent);
+      ent = c;
+      if (free_ent < 1 << BITS) {
+        codetab[i] = free_ent++;
+        htab[i] = fcode;
+      } else {
+        htab.fill(-1);
+        free_ent = ClearCode + 2;
+        clear_flg = true;
+        output(ClearCode);
+      }
+    }
+  }
+  output(ent);
+  output(EOFCode);
+  outStream.writeByte(0);
+  return outStream.bytesView();
+  function output(code) {
+    cur_accum &= MASKS[cur_bits];
+    if (cur_bits > 0)
+      cur_accum |= code << cur_bits;
+    else
+      cur_accum = code;
+    cur_bits += n_bits;
+    while (cur_bits >= 8) {
+      accum[a_count++] = cur_accum & 255;
+      if (a_count >= 254) {
+        outStream.writeByte(a_count);
+        outStream.writeBytesView(accum, 0, a_count);
+        a_count = 0;
+      }
+      cur_accum >>= 8;
+      cur_bits -= 8;
+    }
+    if (free_ent > maxcode || clear_flg) {
+      if (clear_flg) {
+        n_bits = g_init_bits;
+        maxcode = (1 << n_bits) - 1;
+        clear_flg = false;
+      } else {
+        ++n_bits;
+        maxcode = n_bits === BITS ? 1 << n_bits : (1 << n_bits) - 1;
+      }
+    }
+    if (code == EOFCode) {
+      while (cur_bits > 0) {
+        accum[a_count++] = cur_accum & 255;
+        if (a_count >= 254) {
+          outStream.writeByte(a_count);
+          outStream.writeBytesView(accum, 0, a_count);
+          a_count = 0;
+        }
+        cur_accum >>= 8;
+        cur_bits -= 8;
+      }
+      if (a_count > 0) {
+        outStream.writeByte(a_count);
+        outStream.writeBytesView(accum, 0, a_count);
+        a_count = 0;
+      }
+    }
+  }
+}
+var lzwEncode_default = lzwEncode;
+
+// src/rgb-packing.js
+function rgb888_to_rgb565(r, g, b) {
+  return r << 8 & 63488 | g << 2 & 992 | b >> 3;
+}
+function rgba8888_to_rgba4444(r, g, b, a) {
+  return r >> 4 | g & 240 | (b & 240) << 4 | (a & 240) << 8;
+}
+function rgb888_to_rgb444(r, g, b) {
+  return r >> 4 << 8 | g & 240 | b >> 4;
+}
+
+// src/pnnquant2.js
+function clamp(value, min, max) {
+  return value < min ? min : value > max ? max : value;
+}
+function sqr(value) {
+  return value * value;
+}
+function find_nn(bins, idx, hasAlpha) {
+  var nn = 0;
+  var err = 1e100;
+  const bin1 = bins[idx];
+  const n1 = bin1.cnt;
+  const wa = bin1.ac;
+  const wr = bin1.rc;
+  const wg = bin1.gc;
+  const wb = bin1.bc;
+  for (var i = bin1.fw; i != 0; i = bins[i].fw) {
+    const bin = bins[i];
+    const n2 = bin.cnt;
+    const nerr2 = n1 * n2 / (n1 + n2);
+    if (nerr2 >= err)
+      continue;
+    var nerr = 0;
+    if (hasAlpha) {
+      nerr += nerr2 * sqr(bin.ac - wa);
+      if (nerr >= err)
+        continue;
+    }
+    nerr += nerr2 * sqr(bin.rc - wr);
+    if (nerr >= err)
+      continue;
+    nerr += nerr2 * sqr(bin.gc - wg);
+    if (nerr >= err)
+      continue;
+    nerr += nerr2 * sqr(bin.bc - wb);
+    if (nerr >= err)
+      continue;
+    err = nerr;
+    nn = i;
+  }
+  bin1.err = err;
+  bin1.nn = nn;
+}
+function create_bin() {
+  return {
+    ac: 0,
+    rc: 0,
+    gc: 0,
+    bc: 0,
+    cnt: 0,
+    nn: 0,
+    fw: 0,
+    bk: 0,
+    tm: 0,
+    mtm: 0,
+    err: 0
+  };
+}
+function create_bin_list(data, format) {
+  const bincount = format === "rgb444" ? 4096 : 65536;
+  const bins = new Array(bincount);
+  const size = data.length;
+  if (format === "rgba4444") {
+    for (let i = 0; i < size; ++i) {
+      const color = data[i];
+      const a = color >> 24 & 255;
+      const b = color >> 16 & 255;
+      const g = color >> 8 & 255;
+      const r = color & 255;
+      const index = rgba8888_to_rgba4444(r, g, b, a);
+      let bin = index in bins ? bins[index] : bins[index] = create_bin();
+      bin.rc += r;
+      bin.gc += g;
+      bin.bc += b;
+      bin.ac += a;
+      bin.cnt++;
+    }
+  } else if (format === "rgb444") {
+    for (let i = 0; i < size; ++i) {
+      const color = data[i];
+      const b = color >> 16 & 255;
+      const g = color >> 8 & 255;
+      const r = color & 255;
+      const index = rgb888_to_rgb444(r, g, b);
+      let bin = index in bins ? bins[index] : bins[index] = create_bin();
+      bin.rc += r;
+      bin.gc += g;
+      bin.bc += b;
+      bin.cnt++;
+    }
+  } else {
+    for (let i = 0; i < size; ++i) {
+      const color = data[i];
+      const b = color >> 16 & 255;
+      const g = color >> 8 & 255;
+      const r = color & 255;
+      const index = rgb888_to_rgb565(r, g, b);
+      let bin = index in bins ? bins[index] : bins[index] = create_bin();
+      bin.rc += r;
+      bin.gc += g;
+      bin.bc += b;
+      bin.cnt++;
+    }
+  }
+  return bins;
+}
+function quantize(rgba, maxColors, opts = {}) {
+  const {
+    format = "rgb565",
+    clearAlpha = true,
+    clearAlphaColor = 0,
+    clearAlphaThreshold = 0,
+    oneBitAlpha = false
+  } = opts;
+  if (!rgba || !rgba.buffer) {
+    throw new Error("quantize() expected RGBA Uint8Array data");
+  }
+  if (!(rgba instanceof Uint8Array) && !(rgba instanceof Uint8ClampedArray)) {
+    throw new Error("quantize() expected RGBA Uint8Array data");
+  }
+  const data = new Uint32Array(rgba.buffer);
+  let useSqrt = opts.useSqrt !== false;
+  const hasAlpha = format === "rgba4444";
+  const bins = create_bin_list(data, format);
+  const bincount = bins.length;
+  const bincountMinusOne = bincount - 1;
+  const heap = new Uint32Array(bincount + 1);
+  var maxbins = 0;
+  for (var i = 0; i < bincount; ++i) {
+    const bin = bins[i];
+    if (bin != null) {
+      var d = 1 / bin.cnt;
+      if (hasAlpha)
+        bin.ac *= d;
+      bin.rc *= d;
+      bin.gc *= d;
+      bin.bc *= d;
+      bins[maxbins++] = bin;
+    }
+  }
+  if (sqr(maxColors) / maxbins < 0.022) {
+    useSqrt = false;
+  }
+  var i = 0;
+  for (; i < maxbins - 1; ++i) {
+    bins[i].fw = i + 1;
+    bins[i + 1].bk = i;
+    if (useSqrt)
+      bins[i].cnt = Math.sqrt(bins[i].cnt);
+  }
+  if (useSqrt)
+    bins[i].cnt = Math.sqrt(bins[i].cnt);
+  var h, l, l2;
+  for (i = 0; i < maxbins; ++i) {
+    find_nn(bins, i, false);
+    var err = bins[i].err;
+    for (l = ++heap[0]; l > 1; l = l2) {
+      l2 = l >> 1;
+      if (bins[h = heap[l2]].err <= err)
+        break;
+      heap[l] = h;
+    }
+    heap[l] = i;
+  }
+  var extbins = maxbins - maxColors;
+  for (i = 0; i < extbins; ) {
+    var tb;
+    for (; ; ) {
+      var b1 = heap[1];
+      tb = bins[b1];
+      if (tb.tm >= tb.mtm && bins[tb.nn].mtm <= tb.tm)
+        break;
+      if (tb.mtm == bincountMinusOne)
+        b1 = heap[1] = heap[heap[0]--];
+      else {
+        find_nn(bins, b1, false);
+        tb.tm = i;
+      }
+      var err = bins[b1].err;
+      for (l = 1; (l2 = l + l) <= heap[0]; l = l2) {
+        if (l2 < heap[0] && bins[heap[l2]].err > bins[heap[l2 + 1]].err)
+          l2++;
+        if (err <= bins[h = heap[l2]].err)
+          break;
+        heap[l] = h;
+      }
+      heap[l] = b1;
+    }
+    var nb = bins[tb.nn];
+    var n1 = tb.cnt;
+    var n2 = nb.cnt;
+    var d = 1 / (n1 + n2);
+    if (hasAlpha)
+      tb.ac = d * (n1 * tb.ac + n2 * nb.ac);
+    tb.rc = d * (n1 * tb.rc + n2 * nb.rc);
+    tb.gc = d * (n1 * tb.gc + n2 * nb.gc);
+    tb.bc = d * (n1 * tb.bc + n2 * nb.bc);
+    tb.cnt += nb.cnt;
+    tb.mtm = ++i;
+    bins[nb.bk].fw = nb.fw;
+    bins[nb.fw].bk = nb.bk;
+    nb.mtm = bincountMinusOne;
+  }
+  let palette = [];
+  var k = 0;
+  for (i = 0; ; ++k) {
+    let r = clamp(Math.round(bins[i].rc), 0, 255);
+    let g = clamp(Math.round(bins[i].gc), 0, 255);
+    let b = clamp(Math.round(bins[i].bc), 0, 255);
+    let a = 255;
+    if (hasAlpha) {
+      a = clamp(Math.round(bins[i].ac), 0, 255);
+      if (oneBitAlpha) {
+        const threshold = typeof oneBitAlpha === "number" ? oneBitAlpha : 127;
+        a = a <= threshold ? 0 : 255;
+      }
+      if (clearAlpha && a <= clearAlphaThreshold) {
+        r = g = b = clearAlphaColor;
+        a = 0;
+      }
+    }
+    const color = hasAlpha ? [r, g, b, a] : [r, g, b];
+    const exists = existsInPalette(palette, color);
+    if (!exists)
+      palette.push(color);
+    if ((i = bins[i].fw) == 0)
+      break;
+  }
+  return palette;
+}
+function existsInPalette(palette, color) {
+  for (let i = 0; i < palette.length; i++) {
+    const p = palette[i];
+    let matchesRGB = p[0] === color[0] && p[1] === color[1] && p[2] === color[2];
+    let matchesAlpha = p.length >= 4 && color.length >= 4 ? p[3] === color[3] : true;
+    if (matchesRGB && matchesAlpha)
+      return true;
+  }
+  return false;
+}
+
+// src/color.js
+function euclideanDistanceSquared(a, b) {
+  var sum = 0;
+  var n;
+  for (n = 0; n < a.length; n++) {
+    const dx = a[n] - b[n];
+    sum += dx * dx;
+  }
+  return sum;
+}
+
+// src/palettize.js
+function roundStep(byte, step) {
+  return step > 1 ? Math.round(byte / step) * step : byte;
+}
+function prequantize(rgba, {roundRGB = 5, roundAlpha = 10, oneBitAlpha = null} = {}) {
+  const data = new Uint32Array(rgba.buffer);
+  for (let i = 0; i < data.length; i++) {
+    const color = data[i];
+    let a = color >> 24 & 255;
+    let b = color >> 16 & 255;
+    let g = color >> 8 & 255;
+    let r = color & 255;
+    a = roundStep(a, roundAlpha);
+    if (oneBitAlpha) {
+      const threshold = typeof oneBitAlpha === "number" ? oneBitAlpha : 127;
+      a = a <= threshold ? 0 : 255;
+    }
+    r = roundStep(r, roundRGB);
+    g = roundStep(g, roundRGB);
+    b = roundStep(b, roundRGB);
+    data[i] = a << 24 | b << 16 | g << 8 | r << 0;
+  }
+}
+function applyPalette(rgba, palette, format = "rgb565") {
+  if (!rgba || !rgba.buffer) {
+    throw new Error("quantize() expected RGBA Uint8Array data");
+  }
+  if (!(rgba instanceof Uint8Array) && !(rgba instanceof Uint8ClampedArray)) {
+    throw new Error("quantize() expected RGBA Uint8Array data");
+  }
+  if (palette.length > 256) {
+    throw new Error("applyPalette() only works with 256 colors or less");
+  }
+  const data = new Uint32Array(rgba.buffer);
+  const length = data.length;
+  const bincount = format === "rgb444" ? 4096 : 65536;
+  const index = new Uint8Array(length);
+  const cache = new Array(bincount);
+  const hasAlpha = format === "rgba4444";
+  if (format === "rgba4444") {
+    for (let i = 0; i < length; i++) {
+      const color = data[i];
+      const a = color >> 24 & 255;
+      const b = color >> 16 & 255;
+      const g = color >> 8 & 255;
+      const r = color & 255;
+      const key = rgba8888_to_rgba4444(r, g, b, a);
+      const idx = key in cache ? cache[key] : cache[key] = nearestColorIndexRGBA(r, g, b, a, palette);
+      index[i] = idx;
+    }
+  } else {
+    const rgb888_to_key = format === "rgb444" ? rgb888_to_rgb444 : rgb888_to_rgb565;
+    for (let i = 0; i < length; i++) {
+      const color = data[i];
+      const b = color >> 16 & 255;
+      const g = color >> 8 & 255;
+      const r = color & 255;
+      const key = rgb888_to_key(r, g, b);
+      const idx = key in cache ? cache[key] : cache[key] = nearestColorIndexRGB(r, g, b, palette);
+      index[i] = idx;
+    }
+  }
+  return index;
+}
+function nearestColorIndexRGBA(r, g, b, a, palette) {
+  let k = 0;
+  let mindist = 1e100;
+  for (let i = 0; i < palette.length; i++) {
+    const px2 = palette[i];
+    const a2 = px2[3];
+    let curdist = sqr2(a2 - a);
+    if (curdist > mindist)
+      continue;
+    const r2 = px2[0];
+    curdist += sqr2(r2 - r);
+    if (curdist > mindist)
+      continue;
+    const g2 = px2[1];
+    curdist += sqr2(g2 - g);
+    if (curdist > mindist)
+      continue;
+    const b2 = px2[2];
+    curdist += sqr2(b2 - b);
+    if (curdist > mindist)
+      continue;
+    mindist = curdist;
+    k = i;
+  }
+  return k;
+}
+function nearestColorIndexRGB(r, g, b, palette) {
+  let k = 0;
+  let mindist = 1e100;
+  for (let i = 0; i < palette.length; i++) {
+    const px2 = palette[i];
+    const r2 = px2[0];
+    let curdist = sqr2(r2 - r);
+    if (curdist > mindist)
+      continue;
+    const g2 = px2[1];
+    curdist += sqr2(g2 - g);
+    if (curdist > mindist)
+      continue;
+    const b2 = px2[2];
+    curdist += sqr2(b2 - b);
+    if (curdist > mindist)
+      continue;
+    mindist = curdist;
+    k = i;
+  }
+  return k;
+}
+function snapColorsToPalette(palette, knownColors, threshold = 5) {
+  if (!palette.length || !knownColors.length)
+    return;
+  const paletteRGB = palette.map((p) => p.slice(0, 3));
+  const thresholdSq = threshold * threshold;
+  const dim = palette[0].length;
+  for (let i = 0; i < knownColors.length; i++) {
+    let color = knownColors[i];
+    if (color.length < dim) {
+      color = [color[0], color[1], color[2], 255];
+    } else if (color.length > dim) {
+      color = color.slice(0, 3);
+    } else {
+      color = color.slice();
+    }
+    const r = nearestColorIndexWithDistance(paletteRGB, color.slice(0, 3), euclideanDistanceSquared);
+    const idx = r[0];
+    const distanceSq = r[1];
+    if (distanceSq > 0 && distanceSq <= thresholdSq) {
+      palette[idx] = color;
+    }
+  }
+}
+function sqr2(a) {
+  return a * a;
+}
+function nearestColorIndex(colors, pixel, distanceFn = euclideanDistanceSquared) {
+  let minDist = Infinity;
+  let minDistIndex = -1;
+  for (let j = 0; j < colors.length; j++) {
+    const paletteColor = colors[j];
+    const dist = distanceFn(pixel, paletteColor);
+    if (dist < minDist) {
+      minDist = dist;
+      minDistIndex = j;
+    }
+  }
+  return minDistIndex;
+}
+function nearestColorIndexWithDistance(colors, pixel, distanceFn = euclideanDistanceSquared) {
+  let minDist = Infinity;
+  let minDistIndex = -1;
+  for (let j = 0; j < colors.length; j++) {
+    const paletteColor = colors[j];
+    const dist = distanceFn(pixel, paletteColor);
+    if (dist < minDist) {
+      minDist = dist;
+      minDistIndex = j;
+    }
+  }
+  return [minDistIndex, minDist];
+}
+function nearestColor(colors, pixel, distanceFn = euclideanDistanceSquared) {
+  return colors[nearestColorIndex(colors, pixel, distanceFn)];
+}
+
+// src/index.js
+function GIFEncoder(opt = {}) {
+  const {initialCapacity = 4096, auto = true} = opt;
+  const stream = createStream(initialCapacity);
+  const HSIZE = 5003;
+  const accum = new Uint8Array(256);
+  const htab = new Int32Array(HSIZE);
+  const codetab = new Int32Array(HSIZE);
+  let hasInit = false;
+  return {
+    reset() {
+      stream.reset();
+      hasInit = false;
+    },
+    finish() {
+      stream.writeByte(constants_default.trailer);
+    },
+    bytes() {
+      return stream.bytes();
+    },
+    bytesView() {
+      return stream.bytesView();
+    },
+    get buffer() {
+      return stream.buffer;
+    },
+    get stream() {
+      return stream;
+    },
+    writeHeader,
+    writeFrame(index, width, height, opts = {}) {
+      const {
+        transparent = false,
+        transparentIndex = 0,
+        delay = 0,
+        palette = null,
+        repeat = 0,
+        colorDepth = 8,
+        dispose = -1
+      } = opts;
+      let first = false;
+      if (auto) {
+        if (!hasInit) {
+          first = true;
+          writeHeader();
+          hasInit = true;
+        }
+      } else {
+        first = Boolean(opts.first);
+      }
+      width = Math.max(0, Math.floor(width));
+      height = Math.max(0, Math.floor(height));
+      if (first) {
+        if (!palette) {
+          throw new Error("First frame must include a { palette } option");
+        }
+        encodeLogicalScreenDescriptor(stream, width, height, palette, colorDepth);
+        encodeColorTable(stream, palette);
+        if (repeat >= 0) {
+          encodeNetscapeExt(stream, repeat);
+        }
+      }
+      const delayTime = Math.round(delay / 10);
+      encodeGraphicControlExt(stream, dispose, delayTime, transparent, transparentIndex);
+      const useLocalColorTable = Boolean(palette) && !first;
+      encodeImageDescriptor(stream, width, height, useLocalColorTable ? palette : null);
+      if (useLocalColorTable)
+        encodeColorTable(stream, palette);
+      encodePixels(stream, index, width, height, colorDepth, accum, htab, codetab);
+    }
+  };
+  function writeHeader() {
+    writeUTFBytes(stream, "GIF89a");
+  }
+}
+function encodeGraphicControlExt(stream, dispose, delay, transparent, transparentIndex) {
+  stream.writeByte(33);
+  stream.writeByte(249);
+  stream.writeByte(4);
+  if (transparentIndex < 0) {
+    transparentIndex = 0;
+    transparent = false;
+  }
+  var transp, disp;
+  if (!transparent) {
+    transp = 0;
+    disp = 0;
+  } else {
+    transp = 1;
+    disp = 2;
+  }
+  if (dispose >= 0) {
+    disp = dispose & 7;
+  }
+  disp <<= 2;
+  const userInput = 0;
+  stream.writeByte(0 | disp | userInput | transp);
+  writeUInt16(stream, delay);
+  stream.writeByte(transparentIndex || 0);
+  stream.writeByte(0);
+}
+function encodeLogicalScreenDescriptor(stream, width, height, palette, colorDepth = 8) {
+  const globalColorTableFlag = 1;
+  const sortFlag = 0;
+  const globalColorTableSize = colorTableSize(palette.length) - 1;
+  const fields = globalColorTableFlag << 7 | colorDepth - 1 << 4 | sortFlag << 3 | globalColorTableSize;
+  const backgroundColorIndex = 0;
+  const pixelAspectRatio = 0;
+  writeUInt16(stream, width);
+  writeUInt16(stream, height);
+  stream.writeBytes([fields, backgroundColorIndex, pixelAspectRatio]);
+}
+function encodeNetscapeExt(stream, repeat) {
+  stream.writeByte(33);
+  stream.writeByte(255);
+  stream.writeByte(11);
+  writeUTFBytes(stream, "NETSCAPE2.0");
+  stream.writeByte(3);
+  stream.writeByte(1);
+  writeUInt16(stream, repeat);
+  stream.writeByte(0);
+}
+function encodeColorTable(stream, palette) {
+  const colorTableLength = 1 << colorTableSize(palette.length);
+  for (let i = 0; i < colorTableLength; i++) {
+    let color = [0, 0, 0];
+    if (i < palette.length) {
+      color = palette[i];
+    }
+    stream.writeByte(color[0]);
+    stream.writeByte(color[1]);
+    stream.writeByte(color[2]);
+  }
+}
+function encodeImageDescriptor(stream, width, height, localPalette) {
+  stream.writeByte(44);
+  writeUInt16(stream, 0);
+  writeUInt16(stream, 0);
+  writeUInt16(stream, width);
+  writeUInt16(stream, height);
+  if (localPalette) {
+    const interlace = 0;
+    const sorted = 0;
+    const palSize = colorTableSize(localPalette.length) - 1;
+    stream.writeByte(128 | interlace | sorted | 0 | palSize);
+  } else {
+    stream.writeByte(0);
+  }
+}
+function encodePixels(stream, index, width, height, colorDepth = 8, accum, htab, codetab) {
+  lzwEncode_default(width, height, index, colorDepth, stream, accum, htab, codetab);
+}
+function writeUInt16(stream, short) {
+  stream.writeByte(short & 255);
+  stream.writeByte(short >> 8 & 255);
+}
+function writeUTFBytes(stream, text) {
+  for (var i = 0; i < text.length; i++) {
+    stream.writeByte(text.charCodeAt(i));
+  }
+}
+function colorTableSize(length) {
+  return Math.max(Math.ceil(Math.log2(length)), 1);
+}
+var src_default = GIFEncoder;
+//# sourceMappingURL=gifenc.js.map
+; return exports; })();
+const X = { timer:+(store.get('timer', 0) || 0), busy:false };
+function syncX() { $('#xTimerN').textContent = X.timer ? X.timer + 's' : ''; $('#xTimer').classList.toggle('on', !!X.timer); }
+function fireShutter() { const sk = skinName(); if (sk === 'digi') return digiShutter(); if (sk === 'disp') return dispShutter(); if (sk === 'vhs') return vhsRec(); return shoot(); }
+function snapSfx() { try { if (S.sound) sfx(skinName() === 'disp' ? 'disp' : skinName() === 'digi' ? 'digi' : 'shutter'); } catch (e) {} }
+function xFlash() { const f = $('#xFlash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }
+async function countdown(n) {
+  const c = $('#xCount'); c.hidden = false;
+  for (let i = n; i > 0; i--) { c.textContent = i; c.classList.remove('pop'); void c.offsetWidth; c.classList.add('pop'); try { if (S.sound) beep(i === 1 ? 1500 : 1100, .07); } catch (e) {} await wait(1000); }
+  c.hidden = true;
+}
+function grabVF(maxW) { const w = Math.min(maxW || vfOut.width, vfOut.width), h = Math.round(vfOut.height * w / vfOut.width), c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').drawImage(vfOut, 0, 0, w, h); return c; }
+async function timedShutter() { if (X.busy) return; if (!X.timer) return fireShutter(); X.busy = true; try { await countdown(X.timer); await fireShutter(); } finally { X.busy = false; } }
+async function burstGif() {
+  if (X.busy || !S.live) { if (!S.live) hud('turn the camera on first'); return; } X.busy = true;
+  try {
+    if (X.timer) await countdown(X.timer);
+    const frames = []; for (let i = 0; i < 10; i++) { frames.push(grabVF(360)); if (i % 3 === 0) snapSfx(); await wait(110); }
+    const w = frames[0].width, h = frames[0].height, gif = GIFENC.GIFEncoder();
+    frames.concat(frames.slice(1, -1).reverse()).forEach(c => { const d = c.getContext('2d').getImageData(0, 0, w, h).data, pal = GIFENC.quantize(d, 256), idx = GIFENC.applyPalette(d, pal); gif.writeFrame(idx, w, h, { palette:pal, delay:90 }); });
+    gif.finish(); const blob = new Blob([gif.bytes()], { type:'image/gif' });
+    const p = { kind:'photo', cam:S.cam, blob, url:await blobToDataURL(blob), w, h, name:'BURST.GIF', phone:CAMS[S.cam].n, fx:'', time:Date.now(), gif:true };
+    S.roll.unshift(p); trimRoll(); renderRoll(); setLibThumb(p.url); readyBanner(p);
+  } catch (e) { console.error(e); hud("couldn't make that one"); } finally { X.busy = false; }
+}
+async function photoStrip() {
+  if (X.busy || !S.live) { if (!S.live) hud('turn the camera on first'); return; } X.busy = true;
+  try {
+    const shots = [];
+    for (let i = 0; i < 4; i++) { await countdown(i === 0 ? Math.max(3, X.timer) : 2); snapSfx(); xFlash(); shots.push(grabVF(720)); await wait(250); }
+    const W = 640, pad = 28, fw = W - pad * 2, fh = Math.round(fw * 3 / 4), H = pad + 4 * (fh + pad) + 90;
+    const c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+    x.fillStyle = '#f7f5ef'; x.fillRect(0, 0, W, H);
+    shots.forEach((sc, i) => { const r = sc.width / sc.height, tr = fw / fh; let sw = sc.width, sh = sc.height, sx = 0, sy = 0; if (r > tr) { sw = sh * tr; sx = (sc.width - sw) / 2; } else { sh = sw / tr; sy = (sc.height - sh) / 2; } x.drawImage(sc, sx, sy, sw, sh, pad, pad + i * (fh + pad), fw, fh); });
+    const d = new Date(); x.fillStyle = '#1a1a1a'; x.textAlign = 'center';
+    x.font = '400 42px "TB Marker", "Permanent Marker", cursive'; x.fillText('Throwback Cam', W / 2, H - 46);
+    x.font = '400 20px "TB Condensed", Arial Narrow, sans-serif'; x.fillText((d.getMonth() + 1) + ' . ' + d.getDate() + ' . ' + d.getFullYear() + '   ·   ' + CAMS[S.cam].n.toUpperCase(), W / 2, H - 16);
+    const blob = await toBlob(c, 'image/jpeg', .92);
+    const p = { kind:'photo', cam:S.cam, blob, url:await blobToDataURL(blob), w:W, h:H, name:'STRIP.JPG', phone:CAMS[S.cam].n, fx:'', time:Date.now() };
+    S.roll.unshift(p); trimRoll(); renderRoll(); setLibThumb(p.url); readyBanner(p);
+  } catch (e) { console.error(e); hud("couldn't make the strip"); } finally { X.busy = false; $('#xCount').hidden = true; }
+}
+$('#xTimer').addEventListener('click', e => { e.stopPropagation(); X.timer = X.timer === 0 ? 3 : X.timer === 3 ? 10 : 0; store.set('timer', X.timer); syncX(); hud(X.timer ? X.timer + ' second timer on' : 'timer off'); });
+$('#xBurst').addEventListener('click', e => { e.stopPropagation(); burstGif(); });
+$('#xStrip').addEventListener('click', e => { e.stopPropagation(); photoStrip(); });
+$('#xTools').addEventListener('pointerdown', e => e.stopPropagation());
+syncX();
+
+/* ===================== real photo-lab wait for film ===================== */
+S.devWait = store.get('devWait', '0');
+function devReadyAt(t) { if (S.devWait === '1h') return t + 3600e3; if (S.devWait === 'am') { const d = new Date(t); d.setDate(d.getDate() + 1); d.setHours(8, 0, 0, 0); return d.getTime(); } return 0; }
+const isDeveloping = p => p && p.devUntil && Date.now() < p.devUntil;
+function fmtReady(t) { const d = new Date(t), h = d.getHours() % 12 || 12, m = String(d.getMinutes()).padStart(2, '0'), ap = d.getHours() >= 12 ? 'PM' : 'AM', today = new Date().toDateString() === d.toDateString(); return (today ? '' : 'tomorrow ') + h + ':' + m + ' ' + ap; }
+setInterval(() => { const done = S.roll.filter(p => p.devUntil && Date.now() >= p.devUntil && !p.devSeen); if (done.length) { done.forEach(p => { p.devSeen = true; rollMeta(p); }); renderRoll(); readyBanner(done[0]); } }, 20000);
+
+/* ===================== export sizes: story / post / square ===================== */
+const SIZES = { story:[1080, 1920], post:[1080, 1350], square:[1080, 1080] };
+function fitDraw(x, src, sw, sh, W, H) {
+  x.save(); x.filter = 'blur(40px) brightness(.7) saturate(1.2)'; const cs = Math.max(W / sw, H / sh) * 1.1; x.drawImage(src, (W - sw * cs) / 2, (H - sh * cs) / 2, sw * cs, sh * cs); x.restore();
+  const fs = Math.min(W / sw, H / sh); x.drawImage(src, (W - sw * fs) / 2, (H - sh * fs) / 2, sw * fs, sh * fs);
+}
+async function exportSized(p, r) {
+  if (!p) return; const [W, H] = SIZES[r];
+  if (p.kind !== 'video') {
+    const im = new Image(); im.src = p.url; await im.decode();
+    const c = document.createElement('canvas'); c.width = W; c.height = H; fitDraw(c.getContext('2d'), im, im.naturalWidth, im.naturalHeight, W, H);
+    const blob = await toBlob(c, 'image/jpeg', .93); saveItem({ kind:'photo', blob, url:URL.createObjectURL(blob), name:p.name.replace(/\.[^.]+$/, '') + '_' + r.toUpperCase() + '.JPG', w:W, h:H }); return;
+  }
+  const blob = await renderClips([p], W * .75, H * .75, (x, v, w, h) => fitDraw(x, v, v.videoWidth, v.videoHeight, w, h), 'saving ' + r);
+  if (blob) saveItem({ kind:'video', blob, url:URL.createObjectURL(blob), name:p.name.replace(/\.[^.]+$/, '') + '_' + r.toUpperCase() + (/mp4/.test(blob.type) ? '.MP4' : '.WEBM'), w:W, h:H });
+}
+document.querySelectorAll('#xSizes button').forEach(b => b.addEventListener('click', () => exportSized(S.current, b.dataset.r)));
+
+/* ===================== play clips into a canvas and record it (exports + tapes) ===================== */
+async function renderClips(list, W, H, draw, label, between) {
+  W = Math.round(W / 2) * 2; H = Math.round(H / 2) * 2;
+  const c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+  const ac = getAC(), dest = ac.createMediaStreamDestination();
+  const vs = c.captureStream(30), tracks = [...vs.getVideoTracks(), ...dest.stream.getAudioTracks()], ms = new MediaStream(tracks);
+  const mime = ['video/mp4;codecs=avc1', 'video/mp4', 'video/webm;codecs=vp9,opus', 'video/webm'].find(m => window.MediaRecorder && MediaRecorder.isTypeSupported(m)) || '';
+  const rec = new MediaRecorder(ms, mime ? { mimeType:mime, videoBitsPerSecond:3500000 } : undefined), parts = []; rec.ondataavailable = e => { if (e.data && e.data.size) parts.push(e.data); };
+  const ov = $('#dvOv'); ov.hidden = false; $('#dvTxt').textContent = label + '…'; DV.cancel = false; rec.start(500);
+  const total = list.reduce((a, p) => a + (p.dur || 3), 0); let doneT = 0;
+  for (let k = 0; k < list.length && !DV.cancel; k++) {
+    if (between && k > 0) await between(x, W, H);
+    const v = document.createElement('video'); v.playsInline = true; v.muted = false; v.src = list[k].url; v.crossOrigin = 'anonymous';
+    await new Promise(r => { v.onloadeddata = r; v.onerror = r; setTimeout(r, 5000); });
+    let node = null; try { node = ac.createMediaElementSource(v); node.connect(dest); } catch (e) {}
+    await v.play().catch(() => {});
+    await new Promise(res => { const tick = () => { if (DV.cancel || v.ended || v.paused && v.currentTime > 0) return res(); draw(x, v, W, H, k); $('#dvBar').style.width = Math.min(100, (doneT + v.currentTime) / total * 100).toFixed(1) + '%'; requestAnimationFrame(tick); }; v.onended = res; tick(); setTimeout(res, ((v.duration || 30) + 3) * 1000); });
+    doneT += v.duration || 0; try { node && node.disconnect(); } catch (e) {} v.pause(); v.removeAttribute('src');
+  }
+  rec.stop(); await new Promise(r => { rec.onstop = r; }); ov.hidden = true;
+  vs.getTracks().forEach(t => t.stop());
+  return DV.cancel ? null : new Blob(parts, { type:(mime || 'video/webm').split(';')[0] });
+}
+
+/* ===================== tape compilation: your clips back to back like one home video tape ===================== */
+async function makeTape() {
+  const view = S.rollView || 'all', src = (view === 'fav' ? S.roll.filter(p => p.fav) : S.roll).filter(p => p.kind === 'video' && !isDeveloping(p)).slice(0, 12).reverse();
+  if (src.length < 2) { hud('you need at least 2 vids in your roll'); return; }
+  closeSheets(true);
+  const W = 640, H = 480, noise = (x, w, h) => { const id = x.createImageData(w, h), d = id.data; for (let i = 0; i < d.length; i += 4) { const v = Math.random() * 255; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255; } x.putImageData(id, 0, 0); };
+  const blob = await renderClips(src, W, H, (x, v, w, h, k) => {
+    const r = v.videoWidth / v.videoHeight; let dw = w, dh = w / r; if (dh < h) { dh = h; dw = h * r; } x.drawImage(v, (w - dw) / 2, (h - dh) / 2, dw, dh);
+    const tt = performance.now(); if (Math.random() < .03) { const y = Math.random() * h; x.drawImage(x.canvas, 0, y, w, 12, (Math.random() - .5) * 20, y, w, 12); }
+    drawTapeDate(x, w, h); if (S.bug || !proOn()) drawBug(x, w, h, tt);
+  }, 'making your tape', async (x, w, h) => { for (let i = 0; i < 14; i++) { noise(x, w, h); await wait(33); } });
+  if (!blob) { hud('stopped'); return; }
+  const p = { kind:'video', cam:'vhs', blob, url:URL.createObjectURL(blob), poster:'', w:W, h:H, dur:src.reduce((a, q) => a + (q.dur || 0), 0), name:'TAPE.MP4', phone:'Tape', fx:'', time:Date.now() };
+  S.roll.unshift(p); trimRoll(); renderRoll(); readyBanner(p);
+}
+$('#tapeBtn').addEventListener('click', makeTape);
+
+/* ===================== back up / restore the whole Roll (one .zip) ===================== */
+const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(b) { let c = ~0; for (let i = 0; i < b.length; i++) c = CRC[(c ^ b[i]) & 255] ^ (c >>> 8); return (~c) >>> 0; }
+async function backupRoll() {
+  const items = [...S.roll, ...S.trash]; if (!items.length) { hud('nothing to back up yet'); return; }
+  showBusy(true, 'Backing up'); const enc = new TextEncoder(), files = [], meta = [];
+  for (const p of items) { const b = p.blob || await urlBlob(p.url).catch(() => null); if (!b) continue; const nm = (p.id || Math.random().toString(36).slice(2)) + '_' + (p.name || 'file'); files.push([nm, new Uint8Array(await b.arrayBuffer())]); meta.push({ f:nm, kind:p.kind, name:p.name, cam:p.cam, time:p.time, fav:!!p.fav, del:p.del || 0, w:p.w, h:p.h, dur:p.dur, type:b.type }); }
+  files.unshift(['roll.json', enc.encode(JSON.stringify(meta))]);
+  const out = [], cen = []; let off = 0;
+  for (const [n, d] of files) {
+    const nb = enc.encode(n), crc = crc32(d), lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint32(14, crc, true); lh.setUint32(18, d.length, true); lh.setUint32(22, d.length, true); lh.setUint16(26, nb.length, true);
+    out.push(new Uint8Array(lh.buffer), nb, d);
+    const ch = new DataView(new ArrayBuffer(46)); ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint32(16, crc, true); ch.setUint32(20, d.length, true); ch.setUint32(24, d.length, true); ch.setUint16(28, nb.length, true); ch.setUint32(42, off, true);
+    cen.push(new Uint8Array(ch.buffer), nb); off += 30 + nb.length + d.length;
+  }
+  const csz = cen.reduce((a, b) => a + b.length, 0), end = new DataView(new ArrayBuffer(22)); end.setUint32(0, 0x06054b50, true); end.setUint16(8, files.length, true); end.setUint16(10, files.length, true); end.setUint32(12, csz, true); end.setUint32(16, off, true);
+  const blob = new Blob([...out, ...cen, new Uint8Array(end.buffer)], { type:'application/zip' }); showBusy(false);
+  const d = new Date(), name = 'ThrowbackCam_Backup_' + d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') + '.zip';
+  const file = new File([blob], name, { type:'application/zip' });
+  if (PHONE && navigator.canShare && navigator.canShare({ files:[file] })) { try { await navigator.share({ files:[file] }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+  const u = URL.createObjectURL(blob), a = document.createElement('a'); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 60000); hud('backup saved');
+}
+async function restoreRoll(file) {
+  showBusy(true, 'Restoring');
+  try {
+    const buf = new Uint8Array(await file.arrayBuffer()), dv = new DataView(buf.buffer), dec = new TextDecoder(), files = {}; let i = 0;
+    while (i + 30 < buf.length && dv.getUint32(i, true) === 0x04034b50) { const sz = dv.getUint32(i + 18, true), nl = dv.getUint16(i + 26, true), xl = dv.getUint16(i + 28, true), nm = dec.decode(buf.subarray(i + 30, i + 30 + nl)), st = i + 30 + nl + xl; files[nm] = buf.subarray(st, st + sz); i = st + sz; }
+    const meta = JSON.parse(dec.decode(files['roll.json'])), have = new Set([...S.roll, ...S.trash].map(p => (p.name || '') + p.time)); let n = 0;
+    for (const m of meta) { if (have.has((m.name || '') + m.time) || !files[m.f]) continue; const blob = new Blob([files[m.f]], { type:m.type || (m.kind === 'video' ? 'video/mp4' : 'image/jpeg') });
+      const p = { kind:m.kind, name:m.name, cam:m.cam, time:m.time, fav:m.fav, del:m.del, w:m.w, h:m.h, dur:m.dur, blob, url:URL.createObjectURL(blob), named:true };
+      if (m.kind === 'video') { try { const v = document.createElement('video'); v.muted = true; v.src = p.url; await new Promise(r => { v.onloadeddata = r; setTimeout(r, 2500); }); const c = document.createElement('canvas'); c.width = v.videoWidth || 320; c.height = v.videoHeight || 240; c.getContext('2d').drawImage(v, 0, 0, c.width, c.height); p.poster = c.toDataURL('image/jpeg', .7); } catch (e) {} }
+      (p.del ? S.trash : S.roll).push(p); n++; }
+    S.roll.sort((a, b) => (b.time || 0) - (a.time || 0)); renderRoll(); hud(n ? 'put back ' + n + ' pics n vids' : 'everything in that backup is already here');
+  } catch (e) { console.error(e); hud("that's not a Throwback Cam backup"); }
+  showBusy(false);
+}
+$('#bkSave').addEventListener('click', backupRoll);
+$('#bkLoad').addEventListener('click', () => { const i = $('#fileBk'); i.value = ''; i.click(); });
+$('#fileBk').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (f) restoreRoll(f); });
+
+/* ===================== camera packs (owner code unlocks everything free) ===================== */
+const PACKS = [
+  { id:'free', n:'Free', cams:['ig', 'snap', 'ios', 'disp', 'vhs', 'digi06'] },
+  { id:'film', n:'Film Pack', cams:['film98', 'instant'] },
+  { id:'pro', n:'Pro Pack', cams:['pro12', 'minidv'] },
+  { id:'y2k', n:'Y2K Phones', cams:['phone05', 'webcam07', 'bb09', 'flip09'] },
+  { id:'digi', n:'Old Digicams', cams:['digi01', 'digi04', 'floppy98', 'digi11'] }
+];
+const PRO_HASH = 'cvyn9mqh80';
+const proOn = () => store.get('pro') === PRO_HASH;
+const camLocked = id => !proOn() && !PACKS[0].cams.includes(id);
+function syncPro() {
+  const on = proOn(); $('#proState').textContent = on ? 'everything unlocked. no logo needed' : 'unlock every camera + videos with no logo'; $('#proOpen').textContent = on ? 'Unlocked' : 'Unlock';
+  document.querySelectorAll('#camGrid .ccard').forEach(b => b.classList.toggle('locked', camLocked(b.dataset.cam)));
+  const bo = $('#bugOn'); if (bo) { bo.disabled = !on; if (!on) { bo.checked = true; S.bug = true; } }
+}
+function openPro() {
+  $('#packList').innerHTML = PACKS.slice(1).map(k => '<li><b>' + k.n + '</b><span>' + k.cams.map(c => CAMS[c].n).join(', ') + '</span></li>').join('') + '<li><b>No-logo videos</b><span>turn off the Yama TV logo</span></li>';
+  $('#proErr').textContent = ''; $('#proCode').value = ''; $('#proSheet').hidden = false;
+}
+$('#proOpen').addEventListener('click', () => { if (!proOn()) openPro(); });
+$('#proX').addEventListener('click', () => { $('#proSheet').hidden = true; });
+$('#proGo').addEventListener('click', () => {
+  const v = $('#proCode').value.trim().toLowerCase();
+  if (lockHash('tbc:' + v) === PRO_HASH) { store.set('pro', PRO_HASH); $('#proSheet').hidden = true; syncPro(); hud('everything unlocked'); }
+  else { $('#proErr').textContent = "that code didn't work"; }
+});
+
 /* banner that drops down when an upload is done developing, tap it to open */
 function readyBanner(p) {
   const b = $('#readyBan'); b._p = p;
@@ -5765,7 +6831,8 @@ function renderStrip() {
   S.roll.forEach(p => {
     const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', p.name);
     if (B.view === p) b.setAttribute('aria-current', 'true');
-    const im = new Image(); im.loading = 'lazy'; im.src = p.kind === 'video' ? p.poster : p.url; im.alt = ''; b.appendChild(im);
+    if (isDeveloping(p)) { b.classList.add('devwait'); b.innerHTML = '<i class="lab">AT THE LAB<br><small>ready ' + fmtReady(p.devUntil) + '</small></i>'; b.addEventListener('click', e => { e.stopImmediatePropagation(); hud('still developing. ready ' + fmtReady(p.devUntil)); }, true); }
+    else { const im = new Image(); im.loading = 'lazy'; im.src = p.kind === 'video' ? p.poster : p.url; im.alt = ''; b.appendChild(im); }
     if (p.kind === 'video') { const v = document.createElement('span'); v.className = 'vb'; v.textContent = fmtDur(p.dur); b.appendChild(v); }
     b.addEventListener('click', () => openView(p)); s.appendChild(b);
   });
@@ -5866,7 +6933,7 @@ async function urlBlob(u) { if (!u) return null; if (u.startsWith('data:')) retu
 function camFileName(p) {
   const cam = p.cam || 'ios', vidK = p.kind === 'video', key = 'fno_' + cam, n = (store.get(key, 0) || 0) + 1; store.set(key, n);
   const d = new Date(p.time || Date.now()), Y = d.getFullYear(), pad = (v, l) => String(v).padStart(l || 2, '0');
-  const ext = vidK ? (/mp4/.test((p.blob && p.blob.type) || '') ? (['ios', 'ig', 'webcam07', 'digi04', 'pro12'].includes(cam) ? 'MOV' : 'MP4') : 'WEBM') : 'JPG';
+  const ext = p.gif ? 'GIF' : vidK ? (/mp4/.test((p.blob && p.blob.type) || '') ? (['ios', 'ig', 'webcam07', 'digi04', 'pro12'].includes(cam) ? 'MOV' : 'MP4') : 'WEBM') : 'JPG';
   const n4 = pad(n % 10000, 4), n5 = pad(n % 100000, 5), n3 = pad(n % 1000, 3);
   const M = {
     ig:() => 'IMG_' + n4, ios:() => 'IMG_' + n4, snap:() => 'Snapchat-' + (1000000000 + Math.floor(Math.random() * 8999999999)),
@@ -5886,7 +6953,7 @@ async function rollSave(p) {
     if (!p.time) p.time = Date.now();
     const blob = p.blob || await urlBlob(p.url); if (!blob) return;
     const poster = p.kind === 'video' && p.poster ? await urlBlob(p.poster) : null;
-    await rdbReq(rdbStore('readwrite').put({ id:p.id, kind:p.kind, name:p.name, w:p.w, h:p.h, dur:p.dur, time:p.time, cam:p.cam, fx:p.fx, phone:p.phone, fav:!!p.fav, del:p.del || 0, blob, poster }));
+    await rdbReq(rdbStore('readwrite').put({ id:p.id, kind:p.kind, name:p.name, w:p.w, h:p.h, dur:p.dur, time:p.time, cam:p.cam, fx:p.fx, phone:p.phone, fav:!!p.fav, del:p.del || 0, devUntil:p.devUntil || 0, devSeen:!!p.devSeen, gif:!!p.gif, blob, poster }));
     p.stored = true;
   } catch (e) { console.warn('roll save', e); if (e && /quota/i.test(e.name || '')) hud("your phone storage is full, save some pics out n delete them from the roll"); }
   finally { p.storing = false; }
@@ -5894,7 +6961,7 @@ async function rollSave(p) {
 /* change a saved item's fav / deleted flags without touching its picture */
 async function rollMeta(p) {
   if (!RDB.ok || !p.id) return;
-  try { const r = await rdbReq(rdbStore('readonly').get(p.id)); if (!r) { p.stored = false; return rollSave(p); } r.fav = !!p.fav; r.del = p.del || 0; await rdbReq(rdbStore('readwrite').put(r)); } catch (e) {}
+  try { const r = await rdbReq(rdbStore('readonly').get(p.id)); if (!r) { p.stored = false; return rollSave(p); } r.fav = !!p.fav; r.del = p.del || 0; r.devSeen = !!p.devSeen; await rdbReq(rdbStore('readwrite').put(r)); } catch (e) {}
 }
 const TRASH_DAYS = 30;
 async function rollLoad() {
@@ -5905,7 +6972,7 @@ async function rollLoad() {
   all.forEach(r => {
     if (have.has(r.id) || !r.blob) return;
     if (r.del && Date.now() - r.del > TRASH_DAYS * 864e5) { try { rdbStore('readwrite').delete(r.id); } catch (e) {} return; }
-    const p = { id:r.id, kind:r.kind, name:r.name, w:r.w, h:r.h, dur:r.dur, time:r.time, cam:r.cam, fx:r.fx, phone:r.phone, fav:!!r.fav, del:r.del || 0, blob:r.blob, url:URL.createObjectURL(r.blob), stored:true };
+    const p = { id:r.id, kind:r.kind, name:r.name, w:r.w, h:r.h, dur:r.dur, time:r.time, cam:r.cam, fx:r.fx, phone:r.phone, fav:!!r.fav, del:r.del || 0, devUntil:r.devUntil || 0, devSeen:!!r.devSeen, gif:!!r.gif, blob:r.blob, url:URL.createObjectURL(r.blob), stored:true, named:true };
     if (r.poster) p.poster = URL.createObjectURL(r.poster);
     (p.del ? S.trash : S.roll).push(p);
   });
@@ -5965,12 +7032,13 @@ function renderBook() {
   items.forEach((p, i) => {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'bphoto'; b.setAttribute('aria-label', p.name);
     const [x, y] = slots[i]; b.style.left = (x + rnd() * 4 - 2) + '%'; b.style.top = (y + rnd() * 4 - 2) + '%'; b.style.transform = 'rotate(' + (rnd() * 10 - 5).toFixed(1) + 'deg)';
-    const im = new Image(); im.alt = ''; im.loading = 'lazy'; im.src = p.kind === 'video' ? p.poster : p.url; b.appendChild(im);
+    if (isDeveloping(p)) { b.classList.add('devwait'); b.innerHTML = '<i class="lab">AT THE LAB<br><small>ready ' + fmtReady(p.devUntil) + '</small></i>'; }
+    else { const im = new Image(); im.alt = ''; im.loading = 'lazy'; im.src = p.kind === 'video' ? p.poster : p.url; b.appendChild(im); }
     for (let k = 0; k < 2; k++) { const tp = document.createElement('i'); tp.className = 'btape'; tp.style.transform = 'rotate(' + (k ? 35 + rnd() * 15 : -35 - rnd() * 15) + 'deg)'; tp.style[k ? 'right' : 'left'] = '-14%'; tp.style.top = (rnd() < .5 ? '-6%' : '78%'); b.appendChild(tp); }
     const lb = document.createElement('span'); lb.className = 'blabel'; lb.textContent = (CAMS[p.cam] ? CAMS[p.cam].n : p.phone || 'Pic') + (p.kind === 'video' ? ' · ' + fmtDur(p.dur) : '');
     lb.style.left = (rnd() * 30) + '%'; lb.style[rnd() < .5 ? 'top' : 'bottom'] = '-11%'; b.appendChild(lb);
     if (p.fav && view !== 'trash') { const h = document.createElement('i'); h.className = 'bfav'; h.innerHTML = ICO.heart; b.appendChild(h); }
-    b.addEventListener('click', () => { if (view === 'trash') { restoreItem(p); return; } closeSheets(true); openRollItem(p); });
+    b.addEventListener('click', () => { if (isDeveloping(p)) { hud('still developing. ready ' + fmtReady(p.devUntil)); return; } if (view === 'trash') { restoreItem(p); return; } closeSheets(true); openRollItem(p); });
     pg.appendChild(b);
   });
   const n = document.createElement('i'); n.className = 'bpgno'; n.textContent = 'pg ' + (BOOK.pg + 1) + ' of ' + pages; pg.appendChild(n);
@@ -5992,7 +7060,8 @@ function renderRoll() {
   if (view === 'trash' && list.length) { const t = document.createElement('p'); t.className = 'empty'; t.style.gridColumn = '1/-1'; t.style.margin = '0 0 4px'; t.textContent = 'tap one to put it back · these go away for good after 30 days'; g.appendChild(t); }
   list.forEach(p => {
     const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', p.name);
-    const im = new Image(); im.loading = 'lazy'; im.src = p.kind === 'video' ? p.poster : p.url; im.alt = ''; b.appendChild(im);
+    if (isDeveloping(p)) { b.classList.add('devwait'); b.innerHTML = '<i class="lab">AT THE LAB<br><small>ready ' + fmtReady(p.devUntil) + '</small></i>'; b.addEventListener('click', e => { e.stopImmediatePropagation(); hud('still developing. ready ' + fmtReady(p.devUntil)); }, true); }
+    else { const im = new Image(); im.loading = 'lazy'; im.src = p.kind === 'video' ? p.poster : p.url; im.alt = ''; b.appendChild(im); }
     if (p.kind === 'video') { const v = document.createElement('span'); v.className = 'vb'; v.textContent = fmtDur(p.dur); b.appendChild(v); }
     if (p.fav && view !== 'trash') { const h = document.createElement('span'); h.className = 'fv'; h.innerHTML = ICO.heart; b.appendChild(h); }
     if (view === 'trash') { b.style.opacity = '.75'; b.addEventListener('click', () => restoreItem(p)); }
@@ -6019,7 +7088,7 @@ buildStrip(); buildLensStrip(); buildLensTray(); buildAdjStrip(); buildBeauty();
 { const TL = { tCrop:'Shape', tBorder:'Border', tTilt:'Blur', tLux:'Lux', tLens:'Lenses', tDev:'Tools', tCine:'Steady' };
   Object.keys(TL).forEach(id => { const b = $('#' + id); if (b && !b.querySelector('.tlab')) { const l = document.createElement('span'); l.className = 'tlab'; l.textContent = TL[id]; b.appendChild(l); } }); }
 setTimeout(() => { if (!store.get('menuTip') && S.ui === 'phone' && !S.home) { store.set('menuTip', 1); hud(CAMS[S.cam].retro ? 'tap Menu to switch cameras, see your roll n settings' : 'tap the camera icon to switch cameras, see your roll n settings'); } }, 2500); renderStrip(); syncFlash(); syncGrid(); syncTools();
-segSet('#segMirror', S.mirror ? 1 : 0); segSet('#segSound', S.sound ? 1 : 0); segSet('#segSize', S.saveSize); segSet('#segAcc', store.get('acc', 'orange') === 'green' ? 'green' : 'orange'); segSet('#segTheme', store.get('theme', 'grind') === 'classic' ? 'classic' : 'grind'); segSet('#segFlare', S.flareDef);
+segSet('#segMirror', S.mirror ? 1 : 0); segSet('#segSound', S.sound ? 1 : 0); segSet('#segSize', S.saveSize); segSet('#segDev', S.devWait); syncPro(); segSet('#segAcc', store.get('acc', 'orange') === 'green' ? 'green' : 'orange'); segSet('#segTheme', store.get('theme', 'grind') === 'classic' ? 'classic' : 'grind'); segSet('#segFlare', S.flareDef);
 if (gl) { try { ['stat', 'live', 'filter', 'booth', 'bmask', 'mixacc'].forEach(prog); } catch (e) { console.error(e); } }
 $('#app').hidden = S.ui === 'booth'; $('#booth').hidden = S.ui !== 'booth';
 if (S.ui === 'booth') S.screen = 'booth';
@@ -6053,7 +7122,7 @@ document.addEventListener('visibilitychange', () => {
   if (vid.paused) vid.play().catch(() => {});
   CW.t = performance.now();
 });
-window.__tbc = { developVideo, setZ, camFileName, openHome, uploadToCam, developDigi, dM, useVideoFile, vhsRec, prog, CAMS, RDB, FILEV, developFilm, rollDelete, restoreItem, renderRoll, rollLoad, S, B, VID, VE, RT, BT_DEF, setCam, develop, redevelop, renderEdit, fromFile, layout, setUI, setMode, openVideoEditor, startSeg, stopSeg, boothShoot, applyLook, LOOKS, AE, LF };
+window.__tbc = { photoStrip, burstGif, makeTape, exportSized, backupRoll, restoreRoll, camLocked, proOn, developVideo, setZ, camFileName, openHome, uploadToCam, developDigi, dM, useVideoFile, vhsRec, prog, CAMS, RDB, FILEV, developFilm, rollDelete, restoreItem, renderRoll, rollLoad, S, B, VID, VE, RT, BT_DEF, setCam, develop, redevelop, renderEdit, fromFile, layout, setUI, setMode, openVideoEditor, startSeg, stopSeg, boothShoot, applyLook, LOOKS, AE, LF };
 })();
 </script>
 </body></html>
