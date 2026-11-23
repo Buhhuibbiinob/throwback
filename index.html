@@ -3389,9 +3389,9 @@ function loop(t) {
   nextDue = t + (1000 / (live ? K.fps(AE) : 15)) * (K.drops && Math.random() < .06 ? 2 : 1) - 4;
   if (!live) { (K.idle || staticFrame)(vfx, vfOut.width, vfOut.height); return; }
   if (Math.abs(videoAspect() - vfOut.width / vfOut.height) > .02) layout();
-  if (K.frame(vid, isFront(), AE, t, vfx, vfOut.width, vfOut.height) && S.openPending) {
-    S.openPending = false; if (K.opened) K.opened();
-  }
+  const drew = K.frame(vid, isFront(), AE, t, vfx, vfOut.width, vfOut.height);
+  if (drew && CAP.size) capFrame(vfOut);
+  if (drew && S.openPending) { S.openPending = false; if (K.opened) K.opened(); }
 }
 
 /* ---------- camera ---------- */
@@ -3678,12 +3678,19 @@ async function ensureMic() {
     VID.mic = m; VID.audioTrack = d.stream.getAudioTracks()[0];
   } catch (e) { VID.mic = false; }
 }
+/* frames are handed to the recording right after each one is drawn, so the video doesn't stutter
+   from the browser grabbing the canvas on its own timer (doubled frames, skipped frames) */
+const CAP = new Set();
+const canManualCap = (() => { try { return !!(window.CanvasCaptureMediaStreamTrack && 'requestFrame' in CanvasCaptureMediaStreamTrack.prototype); } catch (e) { return false; } })();
+function capFrame(canvas) { CAP.forEach(c => { if (c.canvas === canvas) { try { c.track.requestFrame(); } catch (e) {} } }); }
 function newRecorder(canvas, audioTrack, bps) {
-  const vs = canvas.captureStream(30), tracks = vs.getVideoTracks().slice(); if (audioTrack) tracks.push(audioTrack);
+  const manual = canvas === vfOut && canManualCap;
+  const vs = canvas.captureStream(manual ? 0 : 30), tracks = vs.getVideoTracks().slice(); if (audioTrack) tracks.push(audioTrack);
+  const capEntry = manual ? { canvas, track:tracks[0] } : null; if (capEntry) { CAP.add(capEntry); try { tracks[0].requestFrame(); } catch (e) {} }
   const opts = { videoBitsPerSecond:bps, audioBitsPerSecond:64000 }; const mt = audioTrack ? VID.mime : (VID.mimeNoAudio || VID.mime); if (mt) opts.mimeType = mt;
   const rec = new MediaRecorder(new MediaStream(tracks), opts), chunks = [];
   rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
-  const done = new Promise(res => { rec.onstop = () => { vs.getVideoTracks().forEach(tr => tr.stop()); res(new Blob(chunks, { type:(rec.mimeType || VID.mime || 'video/webm').split(';')[0] })); }; });
+  const done = new Promise(res => { rec.onstop = () => { if (capEntry) CAP.delete(capEntry); vs.getVideoTracks().forEach(tr => tr.stop()); res(new Blob(chunks, { type:(rec.mimeType || VID.mime || 'video/webm').split(';')[0] })); }; });
   rec.start(200);
   return { rec, done };
 }
@@ -4474,7 +4481,7 @@ async function retroAudioTrack(kind) {
 /* ---- shared live rendering for the old machines ---- */
 let rtPP = null;
 function rtAE(src, mirror, ae, t) {
-  if (t - ae.meterT > 260) {
+  if (t - ae.meterT > (RT.rec || VID.cur ? 700 : 260)) {
     ae.meterT = t; const m = meter(src, fpFull(src, mirror, S.format));
     ae.tg = Math.log(Math.pow(1 + (Math.pow(m.gain, 1 / 2.2) - 1) * .8, 2.2)); ae.twb = m.cast;
     ae.iso = ae.started ? ae.iso + (m.iso - ae.iso) * .3 : m.iso; ae.started = true;
@@ -4923,11 +4930,18 @@ function syncVhs() {
   $('#vNight').classList.toggle('on', RT.night); $('#vTape').classList.toggle('on', RT.vcr); $('#vKeys').style.visibility = RT.vcr ? 'visible' : 'hidden';
 }
 const MON = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+const TD = { cv:document.createElement('canvas'), key:'' };
 function drawTapeDate(x, w, h) {
   const d = eraDate(Date.now(), RT.era ? 1996 : 0), s = 3;
   const hh = d.getHours() % 12 || 12, tm = hh + ':' + String(d.getMinutes()).padStart(2, '0') + ':' + String(d.getSeconds()).padStart(2, '0') + (d.getHours() >= 12 ? ' PM' : ' AM');
-  pxText(x, tm, w - 30, h - 74, s, '#ffffff', 'r');
-  pxText(x, MON[d.getMonth()] + '. ' + d.getDate() + ' ' + d.getFullYear(), w - 30, h - 44, s, '#ffffff', 'r');
+  const dt = MON[d.getMonth()] + '. ' + d.getDate() + ' ' + d.getFullYear(), key = tm + '|' + dt + '|' + w + 'x' + h;
+  const RW = Math.min(w, 460), RH = 84;
+  if (key !== TD.key) {
+    TD.key = key; if (TD.cv.width !== RW || TD.cv.height !== RH) { TD.cv.width = RW; TD.cv.height = RH; }
+    const c = TD.cv.getContext('2d'); c.clearRect(0, 0, RW, RH);
+    c.save(); c.translate(RW - w, RH - h); pxText(c, tm, w - 30, h - 74, s, '#ffffff', 'r'); pxText(c, dt, w - 30, h - 44, s, '#ffffff', 'r'); c.restore();
+  }
+  x.drawImage(TD.cv, w - RW, h - RH);
 }
 function tc(sec) { sec = Math.max(0, sec); return Math.floor(sec / 3600) + ':' + String(Math.floor(sec / 60) % 60).padStart(2, '0') + ':' + String(Math.floor(sec % 60)).padStart(2, '0'); }
 function drawVhsOSD(t) {
@@ -4977,7 +4991,7 @@ async function vhsRec(quick) {
   const r = newRecorder(vfOut, track, 2500000);
   RT.rec = { rec:r.rec, done:r.done, t0:performance.now(), poster:'' }; RT.counterNow = RT.counter; syncVhs();
   if (RT.fader) fadeTo(0, 900);
-  setTimeout(() => { if (RT.rec === r || RT.rec) try { RT.rec.poster = vfOut.toDataURL('image/jpeg', .7); } catch (e) {} }, 1100);
+  setTimeout(() => { const cur = RT.rec; if (!cur) return; try { vfOut.toBlob(b => { if (b) cur.poster = URL.createObjectURL(b); }, 'image/jpeg', .7); } catch (e) {} }, 1100);
   RT.recTimer = setTimeout(() => { if (RT.rec) vhsRec(); }, 180000);
 }
 function vhsClips() { return S.roll.filter(p => p.cam === S.cam && p.kind === 'video'); }
@@ -5420,7 +5434,7 @@ document.addEventListener('visibilitychange', () => {
   if (vid.paused) vid.play().catch(() => {});
   CW.t = performance.now();
 });
-window.__tbc = { prog, CAMS, RDB, FILEV, developFilm, rollDelete, restoreItem, renderRoll, rollLoad, S, B, VID, VE, RT, BT_DEF, setCam, develop, redevelop, renderEdit, fromFile, layout, setUI, setMode, openVideoEditor, startSeg, stopSeg, boothShoot, applyLook, LOOKS, AE, LF };
+window.__tbc = { useVideoFile, vhsRec, prog, CAMS, RDB, FILEV, developFilm, rollDelete, restoreItem, renderRoll, rollLoad, S, B, VID, VE, RT, BT_DEF, setCam, develop, redevelop, renderEdit, fromFile, layout, setUI, setMode, openVideoEditor, startSeg, stopSeg, boothShoot, applyLook, LOOKS, AE, LF };
 })();
 </script>
 </body></html>
