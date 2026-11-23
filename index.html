@@ -180,6 +180,12 @@ svg{display:block;overflow:visible}
 .psec.gup{color:#ff9fd6}
 .linkbtn{background:none;border:0;color:#ff6b6b;font:600 calc(13*var(--u))/1 var(--ui);padding:calc(10*var(--u));margin-top:calc(2*var(--u));cursor:pointer}
 .filechip{position:absolute;z-index:30;left:50%;top:calc(8*var(--u));transform:translateX(-50%);background:rgba(0,0,0,.62);color:#fff;border:0;border-radius:999px;padding:calc(6*var(--u)) calc(12*var(--u));font:600 calc(11*var(--u))/1.2 var(--ui);white-space:nowrap;cursor:pointer}
+#camDisp.inst #pWheel,#camDisp.inst #pWind,#camDisp.inst #pLab,#camDisp.inst #pRot{display:none}
+.rollgrid .fv{position:absolute;right:calc(4*var(--u));top:calc(3*var(--u));color:#ff4f7b;font-size:calc(14*var(--u));text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.rtabs{display:flex;gap:calc(6*var(--u));margin:0 0 calc(8*var(--u))}
+.rtabs button{flex:1;border:0;border-radius:999px;padding:calc(7*var(--u)) 0;background:rgba(255,255,255,.1);color:#ddd;font:600 calc(12*var(--u))/1 var(--ui);cursor:pointer}
+.rtabs button.on{background:#fff;color:#111}
+.favbtn{background:none;border:0;color:#ff4f7b;font:600 calc(13*var(--u))/1 var(--ui);padding:calc(10*var(--u));cursor:pointer}
 #guLock .pbody.shake{animation:guShake .35s}
 @keyframes guShake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
 #guIn{flex:1 1 auto;min-width:0}
@@ -817,6 +823,7 @@ svg{display:block;overflow:visible}
       <div class="meta" id="metaLine"></div>
       <button class="bigbtn" id="saveBtn" type="button">Save to Camera Roll</button>
       <p class="hint" id="saveHint">or press and hold the pic to save it</p>
+      <button class="favbtn" id="favBtn" type="button">♡ add to faves</button>
       <button class="linkbtn" id="delBtn" type="button">delete from roll</button>
     </div>
   </section>
@@ -863,6 +870,7 @@ svg{display:block;overflow:visible}
   </section>
   <section class="sheet" id="rollSheet" aria-label="Roll" hidden>
     <header><h2>Roll</h2><div class="hbtns"><button class="dbtn" id="saveAllBtn" type="button">Save all</button><button class="dbtn" id="importBtn" type="button">Import</button><button class="dbtn icon" id="setBtn" type="button" aria-label="Settings"><svg class="ico" viewBox="0 0 24 24" style="width:calc(17*var(--u));height:calc(17*var(--u))"><circle cx="12" cy="12" r="7.9" fill="none" stroke="#d9dcdf" stroke-width="4.2" stroke-dasharray="2.75 2.45"/><circle cx="12" cy="12" r="6.2" class="g"/><circle cx="12" cy="12" r="2.4" fill="#2a2d31"/></svg></button><button class="dbtn go" id="rollClose" type="button">Done</button></div></header>
+    <div class="rtabs" id="rTabs"><button type="button" data-v="all" class="on">All</button><button type="button" data-v="fav">♥ Faves</button><button type="button" data-v="trash">Recently deleted</button></div>
     <div class="rollgrid" id="rollGrid"></div>
     <p class="empty" id="rollEmpty">your pics n vids stay right here on this phone, even after you close the app. tap one to save it to your camera roll</p>
   </section>
@@ -950,9 +958,13 @@ const CAMS = {
   snap:   { n:'Snapchat', sub:'2015-2016 · dog filter, swipe filters, captions. streak days', skin:'snap' },
   ios:    { n:'iPhone Camera', sub:'just the regular camera app, on whatever iphone you pick', skin:'ios' },
   phone05: { n:'Flip Phone', sub:'2005 · vga camera phone, no flash, grainy n blurry like the bus stop pics', skin:'digi', retro:1 },
+  webcam07: { n:'Webcam', sub:'2007 · laptop webcam, myspace angles n dim bedroom lighting', skin:'digi', retro:1 },
+  bb09: { n:'BlackBerry', sub:'2009 · 3.2mp phone cam with that harsh lil led flash, bbm pic energy', skin:'digi', retro:1 },
   digi01: { n:'Digicam', sub:'2001 · 2 megapixels, tiny lil screen, crusty in the best way', skin:'digi', retro:1 },
   digi06: { n:'Point & Shoot', sub:'2006 · flash so harsh it\'s iconic, date stamp, myspace pfp era', skin:'digi', retro:1 },
   digi11: { n:'Cyber Flash', sub:'2011 · 12mp point n shoot, flash on everything, tumblr n party blog era', skin:'digi', retro:1 },
+  film98: { n:'35mm Point & Shoot', sub:"1998 · real film camera with the orange date stamp in the corner, flash pops", skin:'disp', retro:1 },
+  instant: { n:'Instant', sub:'polaroid type beat · square pics in the white frame, prints right away, 10 per pack', skin:'disp', retro:1 },
   disp:   { n:'Disposable', sub:'90s-2000s · 27 shots, no redos, gotta wait for them to develop', skin:'disp', retro:1 },
   vhs:    { n:'Camcorder', sub:'90s · home video tape, date on the screen, fuzzy in a good way', skin:'vhs', retro:1 },
   minidv: { n:'MiniDV', sub:'2004 · digital tape camcorder, cleaner but still that home video feel', skin:'vhs', retro:1 },
@@ -3945,7 +3957,7 @@ async function exportPhoto() {
 }
 function fmtDur(s) { s = Math.max(1, Math.round(s || 0)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
 function openShare(p) {
-  S.current = p; const img = $('#finalImg'), fv = $('#finalVid'), isV = p.kind === 'video';
+  S.current = p; if (window.syncFavSoon) setTimeout(syncFavSoon, 0); const img = $('#finalImg'), fv = $('#finalVid'), isV = p.kind === 'video';
   img.hidden = isV; fv.hidden = !isV;
   if (isV) { fv.src = p.url; fv.muted = false; fv.play().catch(() => { fv.muted = true; fv.play().catch(() => {}); }); } else img.src = p.url;
   $('#metaLine').textContent = p.name.toUpperCase() + ' · ' + p.w + ' × ' + p.h + (isV ? ' · ' + fmtDur(p.dur) : '') + ' · ' + p.phone + (p.fx && p.fx !== 'Normal' ? ' · ' + p.fx : '');
@@ -3995,6 +4007,10 @@ $('#nextBtn').addEventListener('click', async () => {
 $('#saveBtn').addEventListener('click', () => saveItem(S.current));
 $('#backCam').addEventListener('click', () => show('cam'));
 $('#saveAllBtn').addEventListener('click', saveAll);
+$('#rTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; S.rollView = b.dataset.v; renderRoll(); });
+window.syncFavSoon = () => syncFav();
+const syncFav = () => { const p = S.current; $('#favBtn').textContent = p && p.fav ? '♥ in your faves' : '♡ add to faves'; };
+$('#favBtn').addEventListener('click', () => { const p = S.current; if (!p) return; p.fav = !p.fav; syncFav(); if (p.stored) rollMeta(p); else rollSave(p); renderRoll(); });
 $('#vidThru').addEventListener('click', () => { closeSheets(true); const i = $('#fileThru'); i.value = ''; i.click(); });
 $('#fileThru').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (f) useVideoFile(f); });
 $('#fileChip').addEventListener('click', e => { e.stopPropagation(); leaveVideoFile(); });
@@ -4003,7 +4019,7 @@ let delArm = 0;
 $('#delBtn').addEventListener('click', () => {
   const p = S.current; if (!p) return;
   if (Date.now() - delArm > 2500) { delArm = Date.now(); $('#delBtn').textContent = 'tap again to delete it for good'; setTimeout(() => { $('#delBtn').textContent = 'delete from roll'; }, 2500); return; }
-  delArm = 0; $('#delBtn').textContent = 'delete from roll'; rollDelete(p); hud('deleted'); $('#doneBtn').click();
+  delArm = 0; $('#delBtn').textContent = 'delete from roll'; rollDelete(p); hud('moved to recently deleted'); $('#doneBtn').click();
 });
 $('#backEdit').addEventListener('click', () => {
   const p = S.current; if (!p || p.kind !== 'photo') return;
@@ -4364,6 +4380,8 @@ const RT = {
 const DIGI = {
   digi01: { name:'Digicam 2001', size:[1600, 1200], inner:.6, sat:1.06, noise:.05, chromaN:.04, fringe:1, soft:.7, jpeg:.5, tint:[.97, 1.02, 1.01], lcd:[176, 132], lcdIn:[236, 177], af:900, write:2200, sharp:2.2, year:2001, smear:1.2, movie:[320, 240, 15], mbps:350000, awbIn:[1.1, 1, .8], label:'1.6" LCD', print:'2.1 Mega Pixels · Digital Camera', mp:'2M', maxZoom:2 },
   phone05: { name:'Flip Phone 2005', size:[640, 480], inner:.5, sat:.94, noise:.085, chromaN:.07, fringe:.4, soft:.95, jpeg:.42, tint:[1.04, .96, 1.05], lcd:[128, 96], lcdIn:[236, 177], af:120, write:1600, sharp:1.1, year:2005, smear:0, movie:[176, 144, 15], mbps:110000, awbIn:[1.16, 1, .74], label:'1.9" screen', print:'VGA · Camera Phone', mp:'0.3M', maxZoom:4, noFlash:1, fps:7, shots:180, brand:'Camera Phone' },
+  webcam07: { name:'Webcam 2007', size:[1280, 960], inner:.55, sat:.86, noise:.07, chromaN:.05, fringe:.3, soft:.8, jpeg:.5, tint:[.98, 1.03, 1.04], lcd:[160, 120], lcdIn:[236, 177], af:0, write:500, sharp:1.2, year:2007, smear:0, movie:[320, 240, 15], mbps:300000, awbIn:[1.02, 1, 1.02], label:'built-in iSight', print:'1.3 MP · Built-in Camera', mp:'1.3M', maxZoom:2, noFlash:1, fps:15, shots:999, brand:'Webcam' },
+  bb09: { name:'BlackBerry 2009', size:[2048, 1536], inner:.75, sat:1.1, noise:.045, chromaN:.03, fringe:.5, soft:.5, jpeg:.6, tint:[1.02, 1, .97], lcd:[240, 180], lcdIn:[296, 222], af:700, write:900, sharp:1.5, year:2009, smear:.3, movie:[320, 240, 24], mbps:600000, awbIn:[1.08, 1, .86], label:'2.4" screen', print:'3.2 MP · Flash · Smartphone', mp:'3.2M', maxZoom:2, fps:12, shots:850, brand:'Smartphone' },
   digi11: { name:'Cyber Flash 2011', size:[3000, 2250], inner:.95, sat:1.22, noise:.02, chromaN:.012, fringe:.35, soft:.2, jpeg:.84, tint:[1, 1, 1.02], lcd:[320, 240], lcdIn:[296, 222], af:300, write:450, sharp:1.4, year:2011, smear:.5, movie:[640, 480, 30], mbps:2500000, awbIn:[1.03, 1, .93], label:'3.0" LCD', print:'12.1 Mega Pixels · 5x Zoom · HD', mp:'12M', maxZoom:5, fps:24, shots:1260, brand:'Cyber Flash' },
   digi06: { name:'Point & Shoot 2006', size:[2048, 1536], inner:.88, sat:1.3, noise:.03, chromaN:.02, fringe:.6, soft:.35, jpeg:.7, tint:[.99, 1, 1.03], lcd:[320, 240], lcdIn:[296, 222], af:420, write:700, sharp:1.6, year:2006, smear:.8, movie:[640, 480, 30], mbps:1400000, awbIn:[1.05, 1, .9], label:'2.5" LCD', print:'CCD · 7.2 Mega Pixels · 3x Optical Zoom', mp:'7M', maxZoom:6 }
 };
@@ -4537,7 +4555,7 @@ SK.digi = {
   opened() { startAF(performance.now(), .5); }
 };
 function syncDigi() {
-  const M = dM(), el = $('#camDigi'); el.classList.toggle('m01', S.cam === 'digi01' || S.cam === 'phone05'); el.classList.toggle('m06', S.cam !== 'digi01' && S.cam !== 'phone05');
+  const M = dM(), el = $('#camDigi'); const m01 = ['digi01', 'phone05', 'webcam07', 'bb09'].includes(S.cam); el.classList.toggle('m01', m01); el.classList.toggle('m06', !m01);
   $('#dPrint').textContent = M.print; $('#dLcdLbl').textContent = M.label; $('#dBrand').textContent = M.brand || (S.cam === 'digi01' ? 'Digital Camera' : 'Digital Still Camera');
   $('#dMode').classList.toggle('mov', RT.digiMode === 'movie');
   $('#dPlay').classList.toggle('on', !!RT.play);
@@ -4712,10 +4730,10 @@ function turnRetro() {
 /* ================= DISPOSABLE ================= */
 SK.disp = {
   el:'#camDisp', slot:'#pVf',
-  format: () => RT.port ? '4:3P' : '4:3L',
-  need: () => 44 + 40 + 24 + (RT.port ? 216 : 162) + 200,
-  layout() { const el = $('#camDisp'); el.style.setProperty('--lw', RT.port ? 162 : 216); el.style.setProperty('--lh', RT.port ? 216 : 162); },
-  outSize: () => RT.port ? [360, 480] : [480, 360],
+  format: () => S.cam === 'instant' ? '1:1' : RT.port ? '4:3P' : '4:3L',
+  need: () => 44 + 40 + 24 + (S.cam === 'instant' ? 190 : RT.port ? 216 : 162) + 200,
+  layout() { const el = $('#camDisp'), sq = S.cam === 'instant'; el.style.setProperty('--lw', sq ? 190 : RT.port ? 162 : 216); el.style.setProperty('--lh', sq ? 190 : RT.port ? 216 : 162); },
+  outSize: () => S.cam === 'instant' ? [420, 420] : RT.port ? [360, 480] : [480, 360],
   fps: () => 30,
   frame(src, mirror, ae, t, ctx, ow, oh) {
     if (!vidTex) vidTex = newTex(0, 0);
@@ -4728,10 +4746,18 @@ SK.disp = {
     return true;
   },
   idle(ctx, w, h) { ctx.fillStyle = '#050505'; ctx.fillRect(0, 0, w, h); osdOff(); },
-  enter() { syncDisp(); },
+  enter() {
+    const L = { film98:['ZOOM 35', 'AUTO FOCUS · DATE<br>FLASH · 35mm'], instant:['INSTANT', 'SQUARE FILM · 10 PACK<br>PRINTS RIGHT AWAY'] }[S.cam] || ['QuickFlash', 'ISO 400 · 27 EXP<br>FLASH · 35mm color'];
+    $('#camDisp .pwrap b').textContent = L[0]; $('#camDisp .pwrap span').innerHTML = L[1];
+    $('#camDisp .ptop .prt').textContent = S.cam === 'disp' ? 'Single-use camera · do not open' : S.cam === 'film98' ? 'Date · Panorama · Red-eye' : 'Instant camera · shake it';
+    $('#camDisp').classList.toggle('inst', S.cam === 'instant');
+    if (S.cam === 'instant') { RT.wound = true; if (RT.ileft == null) RT.ileft = +(store.get('ileft') ?? 10); }
+    syncDisp();
+  },
   leave() {}
 };
 function syncDisp() {
+  if (S.cam === 'instant') { $('#pCount').firstChild.textContent = String(RT.ileft ?? 10); $('#pWind').textContent = 'ready'; $('#pWheel').classList.add('ready'); $('#pFlash').classList.toggle('on', RT.flashOn); $('#pLed').classList.toggle('on', RT.charged); return; }
   $('#pCount').firstChild.textContent = String(RT.left);
   $('#pWind').classList.toggle('need', !RT.wound && RT.left > 0); $('#pWind').textContent = RT.left <= 0 ? 'roll done' : RT.wound ? 'ready' : '◀ wind';
   $('#pWheel').classList.toggle('ready', RT.wound);
@@ -4743,8 +4769,25 @@ function dispCharge() {
   const ms = 2600 + Math.random() * 1400; RT.charging = chargeWhine(ms) || true;
   setTimeout(() => { RT.charging = null; if (RT.flashOn) { RT.charged = true; syncDisp(); } }, ms);
 }
+async function instantShutter() {
+  if (!S.live) { pickRetro(); return; }
+  if (RT.ibusy) return;
+  if ((RT.ileft ?? 10) <= 0) { RT.ileft = 10; store.set('ileft', 10); syncDisp(); sfx('thunk'); hud('new pack in, 10 more shots'); return; }
+  const fl = RT.flashOn && RT.charged; sfx('disp');
+  const job = await grabRetro(fl);
+  if (fl) { RT.charged = false; setTimeout(dispCharge, 300); }
+  RT.ileft--; store.set('ileft', RT.ileft); syncDisp(); RT.ibusy = true;
+  job.instant = true; job.no = 10 - RT.ileft;
+  const d = $('#pDev'); d.hidden = false; $('#pDevTxt').textContent = 'shake it…';
+  try {
+    const [p] = await Promise.all([developFilm(job), wait(2200)]);
+    if (p) { S.roll.unshift(p); trimRoll(); renderRoll(); setLibThumb(p.url); d.hidden = true; showPrints([p]); }
+  } catch (e) { console.error(e); } finally { d.hidden = true; RT.ibusy = false; }
+  if (RT.ileft === 0) hud("pack's empty, tap the shutter for a new one");
+}
 async function dispShutter() {
   getAC();
+  if (S.cam === 'instant') return instantShutter();
   if (RT.left <= 0) { sfx('thunk'); hud("roll's done. take it to the 1-hour photo"); return; }
   if (!RT.wound) { sfx('thunk'); const w = $('#pWind'); w.classList.remove('need'); void w.offsetWidth; w.classList.add('need'); return; }
   if (!S.live) { pickRetro(); return; }
@@ -4756,13 +4799,13 @@ async function dispShutter() {
 }
 async function dispTake(job) {
   job.first = RT.left === 27; RT.left--; RT.wound = false;
-  job.stock = RT.stock; job.no = 28 - (RT.left + 1);
+  job.stock = RT.stock; job.no = 28 - (RT.left + 1); job.cam = S.cam;
   const entry = { job }; RT.roll.push(entry);
   entry.p = RT.devQ = RT.devQ.then(() => developFilm(job)).catch(e => { console.error(e); return null; });
   syncDisp();
 }
 async function developFilm(job) {
-  const port = job.port, fmt = port ? '4:3P' : '4:3L', [W, H] = port ? [1200, 1600] : [1600, 1200];
+  const port = job.port, fmt = job.instant ? '1:1' : port ? '4:3P' : '4:3L', [W, H] = job.instant ? [1200, 1200] : port ? [1200, 1600] : [1600, 1200];
   const src = cropZoom(job.srcFull, fmt, 1300, 1);
   const T = [], mk = shared(T);
   try {
@@ -4787,9 +4830,32 @@ async function developFilm(job) {
     /* now and then a fine scratch down the negative from the film advance */
     if (Math.random() < .22) { const sx = W * (.1 + Math.random() * .8); x.strokeStyle = 'rgba(255,255,255,' + (.18 + Math.random() * .15).toFixed(2) + ')'; x.lineWidth = .9; x.beginPath(); x.moveTo(sx, 0); for (let yy = 0; yy <= H; yy += H / 8) x.lineTo(sx + Math.sin(yy * .01 + sx) * 2.5, yy); x.stroke(); }
     if (Math.random() < .18) { x.strokeStyle = 'rgba(255,255,255,.55)'; x.lineWidth = 1.1; x.beginPath(); let px = Math.random() * W, py = Math.random() * H; x.moveTo(px, py); for (let k = 0; k < 6; k++) { px += (Math.random() - .5) * 60; py += (Math.random() - .3) * 50; x.quadraticCurveTo(px + 20, py - 15, px, py); } x.stroke(); }
-    const blob = await toBlob(c, 'image/jpeg', .86); dropCv(c); dropCv(src); dropCv(job.srcFull);
+    if (job.cam === 'film98') filmStamp(x, W, H, job.meta.time);
+    let out = c;
+    if (job.instant) out = instantFrame(c);
+    const blob = await toBlob(out, 'image/jpeg', .88); if (out !== c) dropCv(out); dropCv(c); dropCv(src); dropCv(job.srcFull);
+    if (job.instant) return { kind:'photo', cam:'instant', blob, url:await blobToDataURL(blob), w:1400, h:1700, name:'INSTANT_' + String(Date.now()).slice(-6) + '.JPG', phone:'Instant', fx:'', time:job.meta.time };
+    if (job.cam === 'film98') return { kind:'photo', cam:'film98', blob, url:await blobToDataURL(blob), w:W, h:H, name:'IMG' + String(RT.rollNo).padStart(2, '0') + '_' + String(job.no).padStart(2, '0') + '.JPG', phone:'35mm Point & Shoot', fx:'', time:job.meta.time };
     return { kind:'photo', cam:'disp', blob, url:await blobToDataURL(blob), w:W, h:H, name:'ROLL' + String(RT.rollNo).padStart(2, '0') + '_' + String(job.no).padStart(2, '0') + '.JPG', phone:'Disposable 400', fx:'', time:job.meta.time };
   } finally { T.forEach(free); }
+}
+/* the orange LCD date a 90s film camera burns into the corner of the negative */
+function filmStamp(x, W, H, time) {
+  const d = new Date(time || Date.now()), yy = "'" + String(d.getFullYear()).slice(-2), txt = yy + ' ' + (d.getMonth() + 1) + ' ' + d.getDate();
+  const fs = Math.round(H * .042); x.save(); x.font = '600 ' + fs + 'px "Courier New", monospace'; x.textAlign = 'right'; x.textBaseline = 'alphabetic';
+  const px = W - W * .06, py = H - H * .06;
+  x.globalCompositeOperation = 'screen'; x.filter = 'blur(' + (fs * .18).toFixed(1) + 'px)'; x.fillStyle = 'rgba(255,110,20,.85)'; x.fillText(txt, px, py);
+  x.filter = 'blur(' + (fs * .04).toFixed(1) + 'px)'; x.fillStyle = 'rgba(255,170,60,.95)'; x.fillText(txt, px, py); x.restore();
+}
+/* instant film: soft creamy colors, a lil faded, inside the white frame with the thick bottom */
+function instantFrame(c) {
+  const o = document.createElement('canvas'); o.width = 1400; o.height = 1700; const x = o.getContext('2d');
+  const g = x.createLinearGradient(0, 0, 0, o.height); g.addColorStop(0, '#f4f2ec'); g.addColorStop(1, '#ebe8df'); x.fillStyle = g; x.fillRect(0, 0, o.width, o.height);
+  x.filter = 'saturate(.82) contrast(.9) brightness(1.04) sepia(.12)'; x.drawImage(c, 100, 100, 1200, 1200); x.filter = 'none';
+  x.globalCompositeOperation = 'soft-light'; x.fillStyle = 'rgba(120,170,160,.35)'; x.fillRect(100, 100, 1200, 1200);
+  x.globalCompositeOperation = 'source-over'; const v = x.createRadialGradient(700, 700, 300, 700, 700, 900); v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(40,30,10,.22)'); x.fillStyle = v; x.fillRect(100, 100, 1200, 1200);
+  x.strokeStyle = 'rgba(0,0,0,.08)'; x.lineWidth = 3; x.strokeRect(100, 100, 1200, 1200);
+  return o;
 }
 async function dispDevelop() {
   if (!RT.roll.length) { sfx('thunk'); hud("take some pics first"); return; }
@@ -5239,11 +5305,17 @@ async function rollSave(p) {
     if (!p.time) p.time = Date.now();
     const blob = p.blob || await urlBlob(p.url); if (!blob) return;
     const poster = p.kind === 'video' && p.poster ? await urlBlob(p.poster) : null;
-    await rdbReq(rdbStore('readwrite').put({ id:p.id, kind:p.kind, name:p.name, w:p.w, h:p.h, dur:p.dur, time:p.time, cam:p.cam, fx:p.fx, phone:p.phone, blob, poster }));
+    await rdbReq(rdbStore('readwrite').put({ id:p.id, kind:p.kind, name:p.name, w:p.w, h:p.h, dur:p.dur, time:p.time, cam:p.cam, fx:p.fx, phone:p.phone, fav:!!p.fav, del:p.del || 0, blob, poster }));
     p.stored = true;
   } catch (e) { console.warn('roll save', e); if (e && /quota/i.test(e.name || '')) hud("your phone storage is full, save some pics out n delete them from the roll"); }
   finally { p.storing = false; }
 }
+/* change a saved item's fav / deleted flags without touching its picture */
+async function rollMeta(p) {
+  if (!RDB.ok || !p.id) return;
+  try { const r = await rdbReq(rdbStore('readonly').get(p.id)); if (!r) { p.stored = false; return rollSave(p); } r.fav = !!p.fav; r.del = p.del || 0; await rdbReq(rdbStore('readwrite').put(r)); } catch (e) {}
+}
+const TRASH_DAYS = 30;
 async function rollLoad() {
   if (!window.indexedDB || !await rdbOpen()) return;
   try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
@@ -5251,18 +5323,21 @@ async function rollLoad() {
   const have = new Set(S.roll.map(p => p.id));
   all.forEach(r => {
     if (have.has(r.id) || !r.blob) return;
-    const p = { id:r.id, kind:r.kind, name:r.name, w:r.w, h:r.h, dur:r.dur, time:r.time, cam:r.cam, fx:r.fx, phone:r.phone, blob:r.blob, url:URL.createObjectURL(r.blob), stored:true };
+    if (r.del && Date.now() - r.del > TRASH_DAYS * 864e5) { try { rdbStore('readwrite').delete(r.id); } catch (e) {} return; }
+    const p = { id:r.id, kind:r.kind, name:r.name, w:r.w, h:r.h, dur:r.dur, time:r.time, cam:r.cam, fx:r.fx, phone:r.phone, fav:!!r.fav, del:r.del || 0, blob:r.blob, url:URL.createObjectURL(r.blob), stored:true };
     if (r.poster) p.poster = URL.createObjectURL(r.poster);
-    S.roll.push(p);
+    (p.del ? S.trash : S.roll).push(p);
   });
+  S.trash.sort((a, b) => (b.del || 0) - (a.del || 0));
   S.roll.sort((a, b) => (b.time || 0) - (a.time || 0));
   renderRoll();
   if (S.roll[0]) setLibThumb(S.roll[0].kind === 'video' ? S.roll[0].poster : S.roll[0].url);
 }
+/* deleting moves it to Recently deleted for 30 days, so nothing's gone by accident */
 async function rollDelete(p) {
   const i = S.roll.indexOf(p); if (i >= 0) S.roll.splice(i, 1);
-  if (RDB.ok && p.id) { try { await rdbReq(rdbStore('readwrite').delete(p.id)); } catch (e) {} }
-  [p.url, p.poster].forEach(u => { if (u && u.startsWith('blob:')) { try { URL.revokeObjectURL(u); } catch (e) {} } });
+  p.del = Date.now(); S.trash.unshift(p);
+  if (p.stored) await rollMeta(p); else await rollSave(p);
   renderRoll(); const n = S.roll[0]; if (n) setLibThumb(n.kind === 'video' ? n.poster : n.url); else $('#libFace').innerHTML = '';
 }
 /* save everything in the Roll out to the phone at once */
@@ -5273,15 +5348,26 @@ async function saveAll() {
   for (const f of files) { const u = URL.createObjectURL(f), a = document.createElement('a'); a.href = u; a.download = f.name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 60000); await wait(250); }
   hud('saved ' + files.length + ' to your downloads');
 }
+S.trash = []; S.rollView = 'all';
+function restoreItem(p) {
+  const i = S.trash.indexOf(p); if (i >= 0) S.trash.splice(i, 1);
+  p.del = 0; S.roll.push(p); S.roll.sort((a, b) => (b.time || 0) - (a.time || 0)); rollMeta(p); renderRoll(); hud('put it back in your roll');
+}
 function renderRoll() {
   trimRoll();
   const g = $('#rollGrid'); g.innerHTML = '';
-  $('#rollEmpty').hidden = S.roll.length > 0;
-  S.roll.forEach(p => {
+  const view = S.rollView || 'all', list = view === 'trash' ? S.trash : view === 'fav' ? S.roll.filter(p => p.fav) : S.roll;
+  document.querySelectorAll('#rTabs button').forEach(b => b.classList.toggle('on', b.dataset.v === view));
+  $('#rollEmpty').hidden = list.length > 0;
+  $('#rollEmpty').textContent = view === 'trash' ? "nothing deleted. stuff you delete chills here for 30 days, tap one to put it back" : view === 'fav' ? "no faves yet. open a pic n tap ♡ add to faves" : "your pics n vids stay right here on this phone, even after you close the app. tap one to save it to your camera roll";
+  if (view === 'trash' && list.length) { const t = document.createElement('p'); t.className = 'empty'; t.style.gridColumn = '1/-1'; t.style.margin = '0 0 4px'; t.textContent = 'tap one to put it back · these go away for good after 30 days'; g.appendChild(t); }
+  list.forEach(p => {
     const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', p.name);
     const im = new Image(); im.loading = 'lazy'; im.src = p.kind === 'video' ? p.poster : p.url; im.alt = ''; b.appendChild(im);
     if (p.kind === 'video') { const v = document.createElement('span'); v.className = 'vb'; v.textContent = fmtDur(p.dur); b.appendChild(v); }
-    b.addEventListener('click', () => { closeSheets(); openRollItem(p); });
+    if (p.fav && view !== 'trash') { const h = document.createElement('span'); h.className = 'fv'; h.textContent = '♥'; b.appendChild(h); }
+    if (view === 'trash') { b.style.opacity = '.75'; b.addEventListener('click', () => restoreItem(p)); }
+    else b.addEventListener('click', () => { closeSheets(); openRollItem(p); });
     g.appendChild(b);
     if (!p.stored) rollSave(p);
   });
@@ -5334,7 +5420,7 @@ document.addEventListener('visibilitychange', () => {
   if (vid.paused) vid.play().catch(() => {});
   CW.t = performance.now();
 });
-window.__tbc = { prog, CAMS, RDB, FILEV, S, B, VID, VE, RT, BT_DEF, setCam, develop, redevelop, renderEdit, fromFile, layout, setUI, setMode, openVideoEditor, startSeg, stopSeg, boothShoot, applyLook, LOOKS, AE, LF };
+window.__tbc = { prog, CAMS, RDB, FILEV, developFilm, rollDelete, restoreItem, renderRoll, rollLoad, S, B, VID, VE, RT, BT_DEF, setCam, develop, redevelop, renderEdit, fromFile, layout, setUI, setMode, openVideoEditor, startSeg, stopSeg, boothShoot, applyLook, LOOKS, AE, LF };
 })();
 </script>
 </body></html>
