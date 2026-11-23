@@ -442,6 +442,19 @@ html.th-grind #share .bigbtn,html.th-grind #saveBtn{background:var(--acc) !impor
 html.th-grind #saveHint,html.th-grind #metaLine{color:#aaa;font-family:"TB Condensed","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.04em}
 html.th-grind .favbtn{color:#fff;font:400 calc(14*var(--u))/1 "TB Anton","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.05em}
 html.th-grind .linkbtn{color:var(--acc);font:400 calc(13*var(--u))/1 "TB Anton","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.05em}
+.readyban{position:fixed;z-index:9999;left:50%;top:calc(env(safe-area-inset-top,0px) + 8px);width:min(94vw,420px);transform:translate(-50%,-140%);transition:transform .32s cubic-bezier(.2,.9,.3,1.2);
+  display:flex;align-items:center;gap:12px;padding:9px 12px;border:0;border-radius:12px;text-align:left;cursor:pointer;color:#fff;
+  background:linear-gradient(rgba(60,62,68,.97),rgba(28,29,32,.97));box-shadow:0 8px 24px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.18);font-family:var(--ui)}
+.readyban.in{transform:translate(-50%,0)}
+.readyban[hidden]{display:none}
+.readyban img{width:44px;height:44px;object-fit:cover;border-radius:6px;flex:0 0 auto;background:#111;box-shadow:0 0 0 1px rgba(255,255,255,.2)}
+.readyban span{display:flex;flex-direction:column;gap:3px;min-width:0}
+.readyban b{font:700 15px/1.1 var(--ui)} .readyban small{font:500 12px/1.2 var(--ui);color:#c9ccd1}
+html.th-grind .readyban{border-radius:0;background:var(--ug-tags) 0 0/240px 240px,#060606;box-shadow:0 0 0 2px #eee,6px 7px 0 2px #000;transform:translate(-50%,-150%) rotate(-1deg)}
+html.th-grind .readyban.in{transform:translate(-50%,0) rotate(-1deg)}
+html.th-grind .readyban b{font:400 19px/1 "TB Anton","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.04em}
+html.th-grind .readyban small{font:400 12px/1.1 "TB Condensed","Arial Narrow",sans-serif;text-transform:uppercase;letter-spacing:.05em;color:var(--acc)}
+html.th-grind .readyban img{border-radius:0;box-shadow:0 0 0 2px #fff;transform:rotate(3deg)}
 #guLock .pbody.shake{animation:guShake .35s}
 @keyframes guShake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
 #guIn{flex:1 1 auto;min-width:0}
@@ -1151,6 +1164,7 @@ html.th-grind .linkbtn{color:var(--acc);font:400 calc(13*var(--u))/1 "TB Anton",
   <input type="file" id="fileVid" accept="video/*" capture="user" hidden>
   <input type="file" id="fileThru" accept="video/*" hidden>
   <input type="file" id="fileUp" accept="image/*,video/*" hidden>
+  <button class="readyban" id="readyBan" type="button" hidden><img alt=""><span><b>your pic is ready</b><small>it's in your Roll &middot; tap to see it</small></span></button>
   <input type="file" id="fileAny" accept="image/*,video/*" hidden>
   <input type="file" id="fileRetro" accept="image/*" hidden>
 </div>
@@ -5476,8 +5490,8 @@ async function developVideo(file) {
     if (!DV.cancel && blob && blob.size > 2000) {
       const ext = /mp4/.test(blob.type) ? 'MP4' : 'WEBM', [ow, oh] = [vfOut.width, vfOut.height];
       const p = { kind:'video', cam:S.cam, blob, url:URL.createObjectURL(blob), poster, w:ow, h:oh, dur:vid.duration || 0, name:'VID.' + ext, phone:CAMS[S.cam].n, fx:'', time:file.lastModified || Date.now() };
-      S.roll.unshift(p); trimRoll(); renderRoll(); setLibThumb(poster || ''); hud('saved to your roll');
-      leaveVideoFile(); openRollItem(p);
+      S.roll.unshift(p); trimRoll(); renderRoll(); setLibThumb(poster || '');
+      leaveVideoFile(); readyBanner(p);
     } else { hud(DV.cancel ? 'stopped' : "couldn't make that vid"); leaveVideoFile(); }
   } catch (e) { console.error(e); hud("couldn't make that vid"); try { leaveVideoFile(); } catch (_) {} }
   ov.hidden = true; DV.on = false;
@@ -5488,7 +5502,7 @@ async function uploadToCam(file) {
   let full; try { full = await fileCanvas(file); } catch (e) { hud("couldn't open that one"); return; }
   const sk = skinName(), meta = { front:false, flash:false, realFlash:false, iso:1, time:file.lastModified || Date.now(), imported:true };
   const job = { srcFull:full, meta, port:full.height > full.width, zoom:1 };
-  showBusy(true, 'Developing');
+  showBusy(true, 'Developing'); const before = S.roll[0];
   try {
     if (sk === 'digi') { await digiProcess(job); }
     else if (sk === 'disp') {
@@ -5505,7 +5519,18 @@ async function uploadToCam(file) {
     } else { showBusy(false); return fromFile(file, false); }
   } catch (e) { console.error(e); hud("couldn't develop that one"); }
   showBusy(false);
+  if (S.roll[0] && S.roll[0] !== before) readyBanner(S.roll[0]);
 }
+/* banner that drops down when an upload is done developing, tap it to open */
+function readyBanner(p) {
+  const b = $('#readyBan'); b._p = p;
+  b.querySelector('img').src = p.kind === 'video' ? (p.poster || '') : p.url;
+  b.querySelector('b').textContent = p.kind === 'video' ? 'your vid is ready' : 'your pic is ready';
+  b.hidden = false; b.classList.remove('in'); void b.offsetWidth; b.classList.add('in');
+  try { if (S.sound) { beep(1320, .06); setTimeout(() => beep(1760, .08), 90); } } catch (e) {}
+  clearTimeout(readyBanner.t); readyBanner.t = setTimeout(() => { b.classList.remove('in'); setTimeout(() => { b.hidden = true; }, 350); }, 5000);
+}
+$('#readyBan').addEventListener('click', () => { const b = $('#readyBan'), p = b._p; b.classList.remove('in'); b.hidden = true; if (p) { closeSheets(true); openRollItem(p); } });
 $('#dvStop').addEventListener('click', e => { e.stopPropagation(); DV.cancel = true; });
 $('#dvOv').addEventListener('pointerdown', e => e.stopPropagation());
 $('#fileUp').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (f) uploadToCam(f); });
